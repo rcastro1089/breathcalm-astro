@@ -20,47 +20,31 @@ const schema = {
 
   <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center px-4 select-none">
     
-    <!-- Pantalla inicial: Botón de Pánico -->
+    <!-- Home -->
     <div id="home-screen" class="flex flex-col items-center justify-center">
       <div class="mb-8 opacity-60">
         <img src="/icons/lungs.svg" alt="" class="w-12 h-12 text-teal-400" />
       </div>
-      
       <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-4">Calma Ahora</h1>
       <p class="text-lg text-slate-400 text-center mb-10 max-w-sm">Tómate un respiro.</p>
-
-      <!-- Botón principal - grande, redondo, fácil de tocar en móvil -->
-      <button 
-        id="start-btn"
-        class="relative w-44 h-44 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 shadow-2xl shadow-teal-500/40 active:scale-95 transition-transform duration-150 focus:outline-none focus:ring-4 focus:ring-teal-400/50"
-        aria-label="Empezar ejercicio de respiración"
-      >
-        <!-- Pulso exterior -->
+      <button id="start-btn" class="relative w-44 h-44 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 shadow-2xl shadow-teal-500/40 active:scale-95 transition-transform duration-150 focus:outline-none focus:ring-4 focus:ring-teal-400/50" aria-label="Empezar ejercicio de respiración">
         <div class="absolute inset-0 rounded-full border-2 border-teal-400/20 animate-pulse pointer-events-none"></div>
         <div class="absolute inset-[-8px] rounded-full border border-teal-400/10 animate-pulse pointer-events-none" style="animation-delay: 0.5s"></div>
-        
-        <!-- Icono play centrado -->
         <div class="absolute inset-0 flex items-center justify-center">
           <img src="/icons/play.svg" alt="" class="w-14 h-14 md:w-16 md:h-16 text-white ml-1" />
         </div>
       </button>
-
       <p class="mt-8 text-slate-600 text-xs tracking-wider uppercase">Toca para empezar</p>
     </div>
 
-    <!-- Pantalla de ejercicio -->
-    <div id="exercise-screen" class="hidden flex flex-col items-center justify-center w-full max-w-sm mx-auto">
-      
-      <!-- Nombre de la tecnica -->
+    <!-- Ejercicio -->
+    <div id="exercise-screen" class="hidden flex-col items-center justify-center w-full max-w-sm mx-auto">
       <p id="technique-name" class="text-sm text-slate-500 uppercase tracking-widest mb-6">4-7-8</p>
 
-      <!-- Circulo de respiracion con progreso -->
+      <!-- Circulo de progreso por CICLO -->
       <div class="relative w-64 h-64 md:w-72 md:h-72 mb-8">
-        <!-- SVG Circulo de progreso -->
         <svg class="w-full h-full -rotate-90" viewBox="0 0 200 200">
-          <!-- Circulo de fondo -->
-          <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(45,212,191,0.1)" stroke-width="6" />
-          <!-- Circulo de progreso -->
+          <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(45,212,191,0.08)" stroke-width="6" />
           <circle 
             id="progress-ring" 
             cx="100" cy="100" r="90" 
@@ -70,25 +54,21 @@ const schema = {
             stroke-linecap="round"
             stroke-dasharray="565.48"
             stroke-dashoffset="565.48"
-            style="transition: stroke-dashoffset 0.3s linear, stroke 0.3s ease"
+            style="transition: stroke-dashoffset 0.1s linear, stroke 0.5s ease"
           />
         </svg>
         
-        <!-- Circulo interior que late con la respiracion -->
+        <!-- Orbe que respira -->
         <div class="absolute inset-6 rounded-full bg-teal-400/10 border border-teal-400/20 flex items-center justify-center overflow-hidden">
-          <div 
-            id="breath-orb" 
-            class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-teal-400/40 to-cyan-500/40 flex items-center justify-center transition-all ease-in-out"
-            style="transition-duration: 4s"
-          >
+          <div id="breath-orb" class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-teal-400/30 to-cyan-500/30 flex items-center justify-center" style="transition: transform 4s ease-in-out, background 0.5s ease">
             <span id="seconds-display" class="text-4xl md:text-5xl font-bold text-white">4</span>
           </div>
         </div>
       </div>
 
-      <!-- Instruction textual -->
+      <!-- Fase -->
       <p id="phase-text" class="text-2xl md:text-3xl font-semibold text-white mb-2 h-10">Inhala</p>
-      <p id="phase-subtext" class="text-sm text-slate-500 mb-8">por la nariz</p>
+      <p id="phase-subtext" class="text-sm text-slate-500 mb-6">por la nariz</p>
 
       <!-- Timer total -->
       <div class="flex items-center gap-2 text-slate-500 mb-8">
@@ -109,19 +89,27 @@ const schema = {
   </main>
 
   <script>
-    // Configuraciones de tecnicas
     const TECHNIQUES = {
-      '4-7-8': { inhale: 4, hold: 7, exhale: 8, name: '4-7-8' },
+      '4-7-8': { inhale: 4, hold: 7, exhale: 8, holdEmpty: 0, name: '4-7-8' },
       'box': { inhale: 4, hold: 4, exhale: 4, holdEmpty: 4, name: 'Box Breathing' },
-      'diafragmatica': { inhale: 4, hold: 0, exhale: 6, name: 'Diafragmatica' },
-      'nasal': { inhale: 4, hold: 2, exhale: 4, name: 'Nasal Alternante' }
+      'diafragmatica': { inhale: 4, hold: 0, exhale: 6, holdEmpty: 0, name: 'Diafragmatica' },
+      'nasal': { inhale: 4, hold: 2, exhale: 4, holdEmpty: 0, name: 'Nasal Alternante' }
     };
 
-    const CONFIG = TECHNIQUES['4-7-8']; // Default
-    const TOTAL_DURATION = 180; // 3 minutos en segundos
-    const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 90; // r=90
+    const CONFIG = TECHNIQUES['4-7-8'];
+    const CYCLE_DURATION = CONFIG.inhale + CONFIG.hold + CONFIG.exhale + (CONFIG.holdEmpty || 0);
+    const TOTAL_DURATION = 180;
+    const CIRCUMFERENCE = 2 * Math.PI * 90;
 
-    // Elementos DOM
+    // Colores en armonia por fase (paleta calmante)
+    const COLORS = {
+      inhale: '#2dd4bf',    // Teal suave
+      hold: '#a5b4fc',      // Indigo suave
+      exhale: '#67e8f9',    // Cyan claro
+      holdEmpty: '#c4b5fd', // Violeta suave
+      complete: '#86efac'   // Verde suave
+    };
+
     const homeScreen = document.getElementById('home-screen');
     const exerciseScreen = document.getElementById('exercise-screen');
     const startBtn = document.getElementById('start-btn');
@@ -135,63 +123,58 @@ const schema = {
     const totalTimer = document.getElementById('total-timer');
     const techniqueName = document.getElementById('technique-name');
 
-    // Estado
     let isPlaying = false;
     let isPaused = false;
     let secondsRemaining = TOTAL_DURATION;
+    let cycleSeconds = 0;
     let totalTimerInterval = null;
     let phaseTimeout = null;
-    let cycleTimeout = null;
+    let cycleAnimationFrame = null;
 
-    // Funciones
-    function formatTime(secs) {
-      const m = Math.floor(secs / 60);
-      const s = secs % 60;
-      return m + ':' + s.toString().padStart(2, '0');
+    function formatTime(s) {
+      return Math.floor(s/60) + ':' + (s%60).toString().padStart(2,'0');
     }
 
-    function updateProgress() {
-      const progress = (TOTAL_DURATION - secondsRemaining) / TOTAL_DURATION;
-      const offset = CIRCLE_CIRCUMFERENCE * (1 - progress);
+    // Actualizar barra de progreso por CICLO (continuo)
+    function updateCycleProgress() {
+      if (!isPlaying || isPaused) return;
+      cycleSeconds += 0.05; // Incremento cada 50ms
+      if (cycleSeconds > CYCLE_DURATION) cycleSeconds = 0;
+      const progress = cycleSeconds / CYCLE_DURATION;
+      const offset = CIRCUMFERENCE * (1 - progress);
       progressRing.style.strokeDashoffset = offset;
+      cycleAnimationFrame = requestAnimationFrame(() => setTimeout(updateCycleProgress, 50));
     }
 
-    function setPhase(phase, duration, color) {
-      // Actualizar texto
+    function setPhase(phase, duration) {
       const labels = {
-        'inhale': { main: 'Inhala', sub: 'por la nariz', color: '#2dd4bf' },
-        'hold': { main: 'Sostén', sub: 'mantén', color: '#f59e0b' },
-        'exhale': { main: 'Exhala', sub: 'lentamente', color: '#06b6d4' },
-        'holdEmpty': { main: 'Vacío', sub: 'respira', color: '#8b5cf6' }
+        'inhale': { main: 'Inhala', sub: 'por la nariz', color: COLORS.inhale },
+        'hold': { main: 'Sostén', sub: 'mantén', color: COLORS.hold },
+        'exhale': { main: 'Exhala', sub: 'lentamente', color: COLORS.exhale },
+        'holdEmpty': { main: 'Vacío', sub: 'respira', color: COLORS.holdEmpty }
       };
       
-      const label = labels[phase] || labels['inhale'];
+      const label = labels[phase];
       phaseText.textContent = label.main;
       phaseSubtext.textContent = label.sub;
       progressRing.style.stroke = label.color;
       
-      // Animar circulo
+      // Animar orbe
       if (phase === 'inhale') {
         breathOrb.style.transform = 'scale(1.4)';
         breathOrb.style.transitionDuration = duration + 's';
-        breathOrb.style.background = 'linear-gradient(135deg, rgba(45,212,191,0.5), rgba(6,182,212,0.5))';
+        breathOrb.style.background = 'linear-gradient(135deg, rgba(45,212,191,0.4), rgba(6,182,212,0.4))';
       } else if (phase === 'exhale') {
         breathOrb.style.transform = 'scale(1)';
         breathOrb.style.transitionDuration = duration + 's';
-        breathOrb.style.background = 'linear-gradient(135deg, rgba(45,212,191,0.3), rgba(6,182,212,0.3))';
-      } else if (phase === 'hold' || phase === 'holdEmpty') {
-        // Mantener tamaño actual
-        breathOrb.style.transitionDuration = '0.3s';
+        breathOrb.style.background = 'linear-gradient(135deg, rgba(103,232,249,0.3), rgba(167,243,208,0.3))';
       }
       
-      // Countdown en el circulo
+      // Countdown
       let count = duration;
       secondsDisplay.textContent = count;
       const countInterval = setInterval(() => {
-        if (!isPlaying || isPaused) {
-          clearInterval(countInterval);
-          return;
-        }
+        if (!isPlaying || isPaused) { clearInterval(countInterval); return; }
         count--;
         if (count >= 0) secondsDisplay.textContent = count;
       }, 1000);
@@ -201,96 +184,79 @@ const schema = {
 
     function runCycle() {
       if (!isPlaying || secondsRemaining <= 0) return;
+      cycleSeconds = 0;
       
-      // Fase 1: Inhalar
-      let duration = setPhase('inhale', CONFIG.inhale);
+      let dur = setPhase('inhale', CONFIG.inhale);
       phaseTimeout = setTimeout(() => {
         if (!isPlaying || secondsRemaining <= 0) return;
-        
-        // Fase 2: Sostener (si existe)
         if (CONFIG.hold > 0) {
-          duration = setPhase('hold', CONFIG.hold);
+          dur = setPhase('hold', CONFIG.hold);
           phaseTimeout = setTimeout(() => {
             if (!isPlaying || secondsRemaining <= 0) return;
             runExhale();
-          }, duration);
+          }, dur);
         } else {
           runExhale();
         }
-      }, duration);
+      }, dur);
     }
 
     function runExhale() {
       if (!isPlaying || secondsRemaining <= 0) return;
-      
-      let duration = setPhase('exhale', CONFIG.exhale);
+      let dur = setPhase('exhale', CONFIG.exhale);
       phaseTimeout = setTimeout(() => {
         if (!isPlaying || secondsRemaining <= 0) return;
-        
-        // Fase 4: Vacio (si existe)
-        if (CONFIG.holdEmpty && CONFIG.holdEmpty > 0) {
-          duration = setPhase('holdEmpty', CONFIG.holdEmpty);
+        if (CONFIG.holdEmpty > 0) {
+          dur = setPhase('holdEmpty', CONFIG.holdEmpty);
           phaseTimeout = setTimeout(() => {
             if (isPlaying && secondsRemaining > 0) runCycle();
-          }, duration);
-        } else {
-          if (isPlaying && secondsRemaining > 0) runCycle();
+          }, dur);
+        } else if (isPlaying && secondsRemaining > 0) {
+          runCycle();
         }
-      }, duration);
+      }, dur);
     }
 
     function startExercise() {
-      // Mostrar pantalla de ejercicio
       homeScreen.classList.add('hidden');
       exerciseScreen.classList.remove('hidden');
       exerciseScreen.classList.add('flex');
       
-      // Reset estado
       isPlaying = true;
       isPaused = false;
       secondsRemaining = TOTAL_DURATION;
+      cycleSeconds = 0;
       techniqueName.textContent = CONFIG.name;
       
-      // Actualizar UI
-      pauseBtn.querySelector('img').src = '/icons/pause.svg';
+      progressRing.style.strokeDashoffset = CIRCUMFERENCE;
+      breathOrb.style.transform = 'scale(1)';
       totalTimer.textContent = formatTime(secondsRemaining);
-      secondsDisplay.textContent = CONFIG.inhale;
-      phaseText.textContent = 'Inhala';
-      phaseSubtext.textContent = 'por la nariz';
       
-      // Empezar timer total
       totalTimerInterval = setInterval(() => {
         if (isPlaying && !isPaused) {
           secondsRemaining--;
           totalTimer.textContent = formatTime(secondsRemaining);
-          updateProgress();
-          
-          if (secondsRemaining <= 0) {
-            completeExercise();
-          }
+          if (secondsRemaining <= 0) completeExercise();
         }
       }, 1000);
       
-      // Empezar ciclo de respiracion
+      updateCycleProgress();
       runCycle();
     }
 
     function pauseExercise() {
       if (isPaused) {
-        // Resume
         isPaused = false;
         pauseBtn.querySelector('img').src = '/icons/pause.svg';
-        phaseText.textContent = 'Continuando...';
+        updateCycleProgress();
         runCycle();
       } else {
-        // Pause
         isPaused = true;
         pauseBtn.querySelector('img').src = '/icons/play.svg';
+        clearTimeout(phaseTimeout);
+        cancelAnimationFrame(cycleAnimationFrame);
         phaseText.textContent = 'Pausado';
         phaseSubtext.textContent = 'toca para continuar';
-        clearTimeout(phaseTimeout);
-        clearTimeout(cycleTimeout);
-        breathOrb.style.transitionDuration = '0.3s';
       }
     }
 
@@ -299,21 +265,20 @@ const schema = {
       isPaused = false;
       clearInterval(totalTimerInterval);
       clearTimeout(phaseTimeout);
-      clearTimeout(cycleTimeout);
+      cancelAnimationFrame(cycleAnimationFrame);
       
-      // Reset circulo
       breathOrb.style.transform = 'scale(1)';
       breathOrb.style.transitionDuration = '0.5s';
-      breathOrb.style.background = 'linear-gradient(135deg, rgba(45,212,191,0.4), rgba(6,182,212,0.4))';
-      progressRing.style.strokeDashoffset = CIRCLE_CIRCUMFERENCE;
-      progressRing.style.stroke = '#2dd4bf';
+      breathOrb.style.background = 'linear-gradient(135deg, rgba(45,212,191,0.3), rgba(6,182,212,0.3))';
+      progressRing.style.strokeDashoffset = CIRCUMFERENCE;
+      progressRing.style.stroke = COLORS.inhale;
       secondsDisplay.textContent = CONFIG.inhale;
       phaseText.textContent = 'Inhala';
       phaseSubtext.textContent = 'por la nariz';
       totalTimer.textContent = formatTime(TOTAL_DURATION);
       secondsRemaining = TOTAL_DURATION;
+      cycleSeconds = 0;
       
-      // Volver a home
       exerciseScreen.classList.add('hidden');
       exerciseScreen.classList.remove('flex');
       homeScreen.classList.remove('hidden');
@@ -324,21 +289,19 @@ const schema = {
       isPlaying = false;
       clearInterval(totalTimerInterval);
       clearTimeout(phaseTimeout);
+      cancelAnimationFrame(cycleAnimationFrame);
       
       phaseText.textContent = 'Completado';
       phaseSubtext.textContent = 'bien hecho';
       secondsDisplay.textContent = '';
       breathOrb.style.transform = 'scale(1)';
-      breathOrb.style.background = 'linear-gradient(135deg, rgba(16,185,129,0.5), rgba(5,150,105,0.5))';
-      progressRing.style.stroke = '#10b981';
+      breathOrb.style.background = 'linear-gradient(135deg, rgba(134,239,172,0.5), rgba(74,222,128,0.5))';
+      progressRing.style.stroke = COLORS.complete;
+      progressRing.style.strokeDashoffset = '0';
       
-      // Auto-volver a home despues de 3 segundos
-      setTimeout(() => {
-        stopExercise();
-      }, 3000);
+      setTimeout(stopExercise, 3000);
     }
 
-    // Event listeners
     startBtn.addEventListener('click', startExercise);
     pauseBtn.addEventListener('click', pauseExercise);
     stopBtn.addEventListener('click', stopExercise);
