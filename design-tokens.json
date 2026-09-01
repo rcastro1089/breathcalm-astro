@@ -1,0 +1,49 @@
+{
+  "color": {
+    "brand": {
+      "primary": "",
+      "secondary": "",
+      "accent": ""
+    },
+    "neutral": {
+      "bg": "",
+      "surface": "",
+      "text": "",
+      "muted": ""
+    },
+    "semantic": {
+      "success": "",
+      "warning": "",
+      "danger": ""
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "heading": "",
+      "body": "",
+      "mono": ""
+    },
+    "scale": {
+      "base": "",
+      "ratio": ""
+    }
+  },
+  "spacing": {
+    "unit": "",
+    "scale": []
+  },
+  "radius": {
+    "sm": "",
+    "md": "",
+    "lg": ""
+  },
+  "shadow": {
+    "sm": "",
+    "md": "",
+    "lg": ""
+  },
+  "logo": {
+    "svg": "",
+    "wordmark": ""
+  }
+}

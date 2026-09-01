@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const techniques = [
+  { id: '4-7-8', name: 'Técnica 4-7-8', description: 'Dormir rápido', icon: '🫁', time: '3 min' },
+  { id: 'diafragmatica', name: 'Respiración Diafragmática', description: 'Estrés general', icon: '💪', time: '3 min' },
+  { id: 'box', name: 'Box Breathing', description: 'Control mental', icon: '📦', time: '3 min' },
+  { id: 'nasal-alternante', name: 'Nasal Alternante', description: 'Equilibrio', icon: '🧘', time: '5 min' },
+  { id: 'labios-fruncidos', name: 'Labios Fruncidos', description: 'Calma rápida', icon: '💨', time: '3 min' },
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Calma en 3 Minutos",
+  "description": "Ejercicios de respiración para calmar la ansiedad en 3 minutos",
+  "url": "https://calmaen3minutos.com",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+};
+---
+
+<BaseLayout 
+  title="Ejercicios de Respiración para Ansiedad | Calma en 3 Minutos"
+  description="Calma tu ansiedad en 3 minutos con ejercicios de respiración científicamente probados. Técnica 4-7-8, coherencia cardíaca y box breathing. Gratis, sin registro."
+  canonical="https://calmaen3minutos.com/"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <!-- Hero -->
+    <section class="pt-32 pb-16 px-4 text-center">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">
+          Calma tu Ansiedad en 3 Minutos
+        </h1>
+        <p class="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
+          Ejercicios de respiración científicamente probados para reducir el estrés y controlar crisis de ansiedad.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="/tecnica/4-7-8/" class="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-xl transition-colors">
+            Empezar Ahora
+          </a>
+          <a href="#techniques" class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl transition-colors">
+            Ver Técnicas
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Techniques Grid -->
+    <section id="techniques" class="py-16 px-4">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-white text-center mb-12">Técnicas de Respiración</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          {techniques.map(tech => (
+            <a href={`/tecnica/${tech.id}/`} class="block p-6 bg-slate-800/50 rounded-2xl border border-slate-700 hover:border-teal-500 transition-all hover:scale-105">
+              <div class="text-4xl mb-4">{tech.icon}</div>
+              <h3 class="text-xl font-bold text-white mb-2">{tech.name}</h3>
+              <p class="text-slate-400 mb-4">{tech.description}</p>
+              <div class="flex items-center gap-2 text-teal-400">
+                <span>⏱️</span>
+                <span>{tech.time}</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="py-16 px-4 bg-slate-800/30">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-white text-center mb-12">¿Por Qué Funciona?</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="text-5xl mb-4">🔬</div>
+            <h3 class="text-xl font-bold text-white mb-2">Científicamente Probado</h3>
+            <p class="text-slate-400">Técnicas respaldadas por investigación científica y utilizadas por profesionales.</p>
+          </div>
+          <div class="text-center">
+            <div class="text-5xl mb-4">⚡</div>
+            <h3 class="text-xl font-bold text-white mb-2">Rápido y Efectivo</h3>
+            <p class="text-slate-400">Resultados en 3 minutos. Perfecto para momentos de estrés o ansiedad.</p>
+          </div>
+          <div class="text-center">
+            <div class="text-5xl mb-4">🆓</div>
+            <h3 class="text-xl font-bold text-white mb-2">100% Gratis</h3>
+            <p class="text-slate-400">Sin registro, sin downloads, sin costos. Accesible desde cualquier dispositivo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-16 px-4 text-center">
+      <div class="max-w-2xl mx-auto">
+        <h2 class="text-3xl font-bold text-white mb-4">¿Listo para Calmar tu Ansiedad?</h2>
+        <p class="text-slate-400 mb-8">Empieza ahora con la técnica 4-7-8, la más recomendada para principiantes.</p>
+        <a href="/tecnica/4-7-8/" class="inline-flex items-center gap-2 px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white font-bold text-lg rounded-xl transition-colors">
+          Empezar con 4-7-8 →
+        </a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

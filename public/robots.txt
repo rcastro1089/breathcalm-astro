@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://calmaen3minutos.com/sitemap-index.xml

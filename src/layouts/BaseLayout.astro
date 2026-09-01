@@ -1,0 +1,39 @@
+---
+// Generado por site-pipeline. El LLM (Hermes) rellena diseno y contenido.
+import Analytics from "../components/Analytics.astro";
+import CookieBanner from "../components/CookieBanner.astro";
+export interface Props {
+  title: string;        // <=60 chars, unico por pagina (lo verifica el QA gate)
+  description: string;  // 120-160 chars
+  path: string;         // ruta canonica, ej "/servicios/"
+  ogImage?: string;
+}
+const { title, description, path, ogImage = "/og-image.png" } = Astro.props;
+const site = Astro.site?.toString().replace(/\/$/, "") ?? "https://calmaen3minutos.com";
+const canonical = site + path;
+const ogImageUrl = ogImage.startsWith("http") ? ogImage : site + ogImage;
+---
+<!DOCTYPE html>
+<html lang="es-SV">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="index,follow" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Analytics />
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+    <CookieBanner />
+  </body>
+</html>

@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LanguageSwitcher from '../components/ui/LanguageSwitcher.tsx';
+
+const seo = {
+  title: "Sobre Nosotros | Calma en 3 Minutos",
+  description: "Conoce a Calma en 3 Minutos: ejercicios de respiración científicamente probados para calmar la ansiedad. Gratis y en español.",
+  canonical: "https://calmaen3minutos.com/nosotros/",
+};
+---
+
+<BaseLayout 
+  title={seo.title} 
+  description={seo.description}
+  canonical={seo.canonical}
+>
+  <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50">
+      <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </div>
+          <h1 class="text-xl font-bold text-white">Calma en 3 Minutos</h1>
+        </a>
+        <LanguageSwitcher client:load />
+      </div>
+    </header>
+
+    <section class="pt-24 pb-16 px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold text-white mb-8">Sobre Calma en 3 Minutos</h2>
+        
+        <div class="prose prose-invert max-w-none">
+          <p class="text-slate-300 text-lg mb-6">
+            Calma en 3 Minutos nació con un objetivo claro: hacer accesible la ciencia de la respiración para todos.
+          </p>
+
+          <p class="text-slate-300 mb-6">
+            Las técnicas de respiración que ofrecemos están respaldadas por investigación científica y son utilizadas por profesionales de la salud mental en todo el mundo.
+          </p>
+
+          <h3 class="text-xl font-bold text-white mt-8 mb-4">Nuestra Misión</h3>
+          <p class="text-slate-300 mb-6">
+            Proporcionar herramientas gratuitas y efectivas para manejar la ansiedad, el estrés y las crisis de pánico, accesibles desde cualquier dispositivo en cualquier momento.
+          </p>
+
+          <h3 class="text-xl font-bold text-white mt-8 mb-4">Lo que Ofrecemos</h3>
+          <ul class="text-slate-300 space-y-2">
+            <li>• Ejercicios de respiración científicamente probados</li>
+            <li>• Guías paso a paso en español</li>
+            <li>• Seguimiento de progreso local</li>
+            <li>• 100% gratis, sin registro requerido</li>
+            <li>• Accesible desde cualquier dispositivo</li>
+          </ul>
+
+          <h3 class="text-xl font-bold text-white mt-8 mb-4">Contacto</h3>
+          <p class="text-slate-300">
+            ¿Tienes preguntas o sugerencias? Escríbenos y te responderemos lo antes posible.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
