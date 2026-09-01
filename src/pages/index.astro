@@ -20,15 +20,12 @@ const schema = {
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
-  <!-- Pantalla completa: Botón de Pánico -->
   <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center px-4">
     
     <!-- Logo minimalista -->
     <div class="mb-8">
       <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center animate-pulse">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-        </svg>
+        <img src="/icons/lungs.svg" alt="" class="w-8 h-8 text-white" />
       </div>
     </div>
 
@@ -40,68 +37,59 @@ const schema = {
       Tómate un respiro. Estás a un clic de tranquilidad.
     </p>
 
-    <!-- BOTÓN PRINCIPAL - El "Botón de Pánico" -->
+    <!-- BOTON PRINCIPAL -->
     <button 
       id="panic-button"
       class="group relative w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-teal-500/30 hover:shadow-teal-500/50 focus:outline-none focus:ring-4 focus:ring-teal-400/50"
     >
-      <!-- Anillo exterior animado -->
       <div class="absolute inset-0 rounded-full border-4 border-teal-400/30 animate-ping"></div>
-      
-      <!-- Texto del botón -->
       <div class="absolute inset-0 flex flex-col items-center justify-center">
         <span class="text-5xl md:text-7xl font-bold text-white mb-2">3</span>
         <span class="text-lg md:text-xl text-white/90 font-medium">min</span>
       </div>
     </button>
 
-    <!-- Instrucción -->
     <p class="mt-8 text-slate-500 text-sm animate-bounce">
       Toca para empezar
     </p>
 
-    <!-- Selector rápido de técnica (oculto hasta que decida) -->
+    <!-- Selector rapido de tecnica -->
     <div id="technique-selector" class="hidden mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-lg">
-      <button data-technique="4-7-8" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500">
-        <span class="block text-lg mb-1">🫁</span>
+      <button data-technique="4-7-8" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500 flex flex-col items-center gap-2">
+        <img src="/icons/lungs.svg" alt="" class="w-6 h-6" />
         4-7-8
       </button>
-      <button data-technique="box" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500">
-        <span class="block text-lg mb-1">📦</span>
+      <button data-technique="box" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500 flex flex-col items-center gap-2">
+        <img src="/icons/brain.svg" alt="" class="w-6 h-6" />
         Box
       </button>
-      <button data-technique="diafragmatica" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500">
-        <span class="block text-lg mb-1">💪</span>
-        Diafragmática
+      <button data-technique="diafragmatica" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500 flex flex-col items-center gap-2">
+        <img src="/icons/heart.svg" alt="" class="w-6 h-6" />
+        Diafragmatica
       </button>
-      <button data-technique="nasal" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500">
-        <span class="block text-lg mb-1">🧘</span>
+      <button data-technique="nasal" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500 flex flex-col items-center gap-2">
+        <img src="/icons/nose.svg" alt="" class="w-6 h-6" />
         Nasal
       </button>
     </div>
   </main>
 
-  <!-- Lógica del Botón de Pánico -->
+  <!-- Logica del Boton de Panico -->
   <script>
     const panicButton = document.getElementById('panic-button');
-    const selector = document.getElementById('technique-selector');
-    
-    // Configuraciones de técnicas
     const techniques = {
-      '4-7-8': { inhale: 4, hold: 7, exhale: 8, name: '4-7-8' },
-      'box': { inhale: 4, hold: 4, exhale: 4, holdEmpty: 4, name: 'Box Breathing' },
-      'diafragmatica': { inhale: 4, hold: 0, exhale: 6, name: 'Diafragmática' },
-      'nasal': { inhale: 4, hold: 2, exhale: 4, name: 'Nasal Alternante' }
+      '4-7-8': { inhale: 4, hold: 7, exhale: 8, name: '4-7-8', icon: '/icons/lungs.svg' },
+      'box': { inhale: 4, hold: 4, exhale: 4, holdEmpty: 4, name: 'Box Breathing', icon: '/icons/brain.svg' },
+      'diafragmatica': { inhale: 4, hold: 0, exhale: 6, name: 'Diafragmatica', icon: '/icons/heart.svg' },
+      'nasal': { inhale: 4, hold: 2, exhale: 4, name: 'Nasal Alternante', icon: '/icons/nose.svg' }
     };
 
-    let selectedTechnique = '4-7-8'; // Default
+    let selectedTechnique = '4-7-8';
 
-    // Click en botón principal = empezar con default
     panicButton?.addEventListener('click', () => {
       startBreathing(selectedTechnique);
     });
 
-    // Selección de técnica
     document.querySelectorAll('.technique-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -113,203 +101,144 @@ const schema = {
     function startBreathing(techniqueId) {
       const config = techniques[techniqueId];
       
-      // Crear overlay de ejercicio
       const overlay = document.createElement('div');
       overlay.id = 'breathing-overlay';
       overlay.className = 'fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex flex-col items-center justify-center';
       
       overlay.innerHTML = `
         <div class="text-center">
-          <!-- Círculo de respiración -->
-          <div id="breathing-circle" class="w-48 h-48 md:w-64 md:h-64 rounded-full border-8 border-teal-400 mx-auto mb-8 transition-transform duration-1000 ease-in-out">
-            <div class="w-full h-full rounded-full bg-teal-400/20 flex items-center justify-center">
-              <span id="phase-text" class="text-2xl md:text-3xl font-bold text-white">Preparado</span>
-            </div>
+          <div id="breathing-circle" class="w-48 h-48 md:w-64 md:h-64 rounded-full border-8 border-teal-400 mx-auto mb-8 transition-all duration-1000 ease-in-out flex items-center justify-center">
+            <img src="${config.icon}" alt="" class="w-16 h-16 text-teal-400" />
           </div>
           
-          <!-- Timer -->
           <div id="timer" class="text-5xl md:text-6xl font-bold text-white mb-4">3:00</div>
-          
-          <!-- Fase actual -->
           <p id="instruction" class="text-xl text-teal-400 mb-8">Toca para empezar</p>
           
-          <!-- Controles -->
           <div class="flex gap-4 justify-center">
-            <button id="start-btn" class="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-xl transition-colors">
-              ▶ Empezar
+            <button id="start-btn" class="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-xl transition-colors flex items-center gap-2">
+              <img src="/icons/play.svg" alt="" class="w-5 h-5" /> Empezar
             </button>
-            <button id="close-btn" class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl transition-colors">
-              ✕ Cerrar
+            <button id="close-btn" class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl transition-colors flex items-center gap-2">
+              <img src="/icons/x.svg" alt="" class="w-5 h-5" /> Cerrar
             </button>
           </div>
           
-          <!-- Info de técnica -->
           <p class="mt-8 text-slate-500 text-sm">${config.name}: ${config.inhale}-${config.hold || 0}-${config.exhale}</p>
         </div>
       `;
       
       document.body.appendChild(overlay);
       
-      // Lógica de respiración
       let isPlaying = false;
       let interval;
-      let totalSeconds = 180; // 3 minutos
-      let currentPhase = 'idle';
+      let totalSeconds = 180;
       
-      const phaseText = document.getElementById('phase-text');
-      const timerText = document.getElementById('timer');
-      const instructionText = document.getElementById('instruction');
-      const circle = document.getElementById('breathing-circle');
-      const startBtn = document.getElementById('start-btn');
-      const closeBtn = document.getElementById('close-btn');
+      const phaseText = overlay.querySelector('#instruction');
+      const timerText = overlay.querySelector('#timer');
+      const circle = overlay.querySelector('#breathing-circle');
+      const startBtn = overlay.querySelector('#start-btn');
+      const closeBtn = overlay.querySelector('#close-btn');
       
       function updateTimer() {
         const mins = Math.floor(totalSeconds / 60);
         const secs = totalSeconds % 60;
-        timerText.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-        
+        timerText.textContent = mins + ':' + secs.toString().padStart(2, '0');
         if (totalSeconds <= 0) {
-          stopBreathing();
-          phaseText.textContent = '¡Completado!';
-          instructionText.textContent = 'Has terminado. Respira normalmente.';
+          stop();
+          phaseText.textContent = 'Completado';
           circle.style.transform = 'scale(1)';
           circle.style.borderColor = '#10b981';
         }
       }
       
       function startPhase(phase, duration) {
-        currentPhase = phase;
-        const endTime = Date.now() + duration * 1000;
-        
         if (phase === 'inhale') {
           phaseText.textContent = 'Inhala';
-          instructionText.textContent = `Inhala por la nariz (${config.inhale}s)`;
           circle.style.transform = 'scale(1.3)';
           circle.style.borderColor = '#14b8a6';
         } else if (phase === 'hold') {
           phaseText.textContent = 'Sostén';
-          instructionText.textContent = `Sostén la respiración (${config.hold}s)`;
           circle.style.borderColor = '#f59e0b';
         } else if (phase === 'exhale') {
           phaseText.textContent = 'Exhala';
-          instructionText.textContent = `Exhala lentamente (${config.exhale}s)`;
           circle.style.transform = 'scale(1)';
           circle.style.borderColor = '#06b6d4';
         } else if (phase === 'holdEmpty') {
           phaseText.textContent = 'Vacío';
-          instructionText.textContent = 'Mantén vacío';
           circle.style.borderColor = '#8b5cf6';
         }
-        
-        return endTime;
       }
       
       function runCycle() {
         if (!isPlaying || totalSeconds <= 0) return;
         
-        let endTime;
+        phaseText.textContent = 'Inhala';
+        circle.style.transform = 'scale(1.3)';
+        circle.style.borderColor = '#14b8a6';
         
-        // Fase 1: Inhalar
-        endTime = startPhase('inhale', config.inhale);
-        const inhaleInterval = setInterval(() => {
-          if (Date.now() >= endTime || !isPlaying) {
-            clearInterval(inhaleInterval);
-            if (isPlaying && totalSeconds > 0) runHold();
+        setTimeout(() => {
+          if (!isPlaying || totalSeconds <= 0) return;
+          if (config.hold) {
+            phaseText.textContent = 'Sostén';
+            circle.style.borderColor = '#f59e0b';
+            setTimeout(() => {
+              if (!isPlaying || totalSeconds <= 0) return;
+              runExhale();
+            }, config.hold * 1000);
+          } else {
+            runExhale();
           }
-        }, 100);
-      }
-      
-      function runHold() {
-        if (!isPlaying || totalSeconds <= 0 || !config.hold) {
-          runExhale();
-          return;
-        }
-        
-        let endTime = startPhase('hold', config.hold);
-        const holdInterval = setInterval(() => {
-          if (Date.now() >= endTime || !isPlaying) {
-            clearInterval(holdInterval);
-            if (isPlaying && totalSeconds > 0) runExhale();
-          }
-        }, 100);
+        }, config.inhale * 1000);
       }
       
       function runExhale() {
         if (!isPlaying || totalSeconds <= 0) return;
+        phaseText.textContent = 'Exhala';
+        circle.style.transform = 'scale(1)';
+        circle.style.borderColor = '#06b6d4';
         
-        let endTime = startPhase('exhale', config.exhale);
-        const exhaleInterval = setInterval(() => {
-          if (Date.now() >= endTime || !isPlaying) {
-            clearInterval(exhaleInterval);
-            if (isPlaying && totalSeconds > 0) {
-              if (config.holdEmpty) {
-                runHoldEmpty();
-              } else {
-                runCycle();
-              }
-            }
+        setTimeout(() => {
+          if (!isPlaying || totalSeconds <= 0) return;
+          if (config.holdEmpty) {
+            phaseText.textContent = 'Vacío';
+            circle.style.borderColor = '#8b5cf6';
+            setTimeout(() => {
+              if (isPlaying && totalSeconds > 0) runCycle();
+            }, config.holdEmpty * 1000);
+          } else if (isPlaying && totalSeconds > 0) {
+            runCycle();
           }
-        }, 100);
+        }, config.exhale * 1000);
       }
       
-      function runHoldEmpty() {
-        if (!isPlaying || totalSeconds <= 0 || !config.holdEmpty) {
-          runCycle();
-          return;
-        }
-        
-        let endTime = startPhase('holdEmpty', config.holdEmpty);
-        const emptyInterval = setInterval(() => {
-          if (Date.now() >= endTime || !isPlaying) {
-            clearInterval(emptyInterval);
-            if (isPlaying && totalSeconds > 0) runCycle();
-          }
-        }, 100);
-      }
-      
-      function startBreathingExercise() {
+      function start() {
         isPlaying = true;
         totalSeconds = 180;
-        startBtn.textContent = '⏸ Pausar';
+        startBtn.innerHTML = '<img src="/icons/pause.svg" alt="" class="w-5 h-5" /> Pausar';
         runCycle();
-        
-        interval = setInterval(() => {
-          totalSeconds--;
-          updateTimer();
-        }, 1000);
+        interval = setInterval(() => { totalSeconds--; updateTimer(); }, 1000);
       }
       
-      function pauseBreathing() {
+      function pause() {
         isPlaying = false;
         clearInterval(interval);
-        startBtn.textContent = '▶ Continuar';
+        startBtn.innerHTML = '<img src="/icons/play.svg" alt="" class="w-5 h-5" /> Continuar';
         phaseText.textContent = 'Pausado';
       }
       
-      function stopBreathing() {
+      function stop() {
         isPlaying = false;
         clearInterval(interval);
-        startBtn.textContent = '▶ Empezar';
+        totalSeconds = 180;
+        startBtn.innerHTML = '<img src="/icons/play.svg" alt="" class="w-5 h-5" /> Empezar';
         phaseText.textContent = 'Preparado';
         circle.style.transform = 'scale(1)';
         circle.style.borderColor = '#2dd4bf';
-        totalSeconds = 180;
         updateTimer();
       }
       
-      startBtn.addEventListener('click', () => {
-        if (isPlaying) {
-          pauseBreathing();
-        } else {
-          startBreathingExercise();
-        }
-      });
-      
-      closeBtn.addEventListener('click', () => {
-        stopBreathing();
-        overlay.remove();
-      });
-      
+      startBtn.addEventListener('click', () => isPlaying ? pause() : start());
+      closeBtn.addEventListener('click', () => { stop(); overlay.remove(); });
       updateTimer();
     }
   </script>
