@@ -1,19 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const techniques = [
-  { id: '4-7-8', name: 'Técnica 4-7-8', description: 'Dormir rápido', icon: '🫁', time: '3 min' },
-  { id: 'diafragmatica', name: 'Respiración Diafragmática', description: 'Estrés general', icon: '💪', time: '3 min' },
-  { id: 'box', name: 'Box Breathing', description: 'Control mental', icon: '📦', time: '3 min' },
-  { id: 'nasal-alternante', name: 'Nasal Alternante', description: 'Equilibrio', icon: '🧘', time: '5 min' },
-  { id: 'labios-fruncidos', name: 'Labios Fruncidos', description: 'Calma rápida', icon: '💨', time: '3 min' },
-];
-
 const schema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Calma en 3 Minutos",
-  "description": "Ejercicios de respiración para calmar la ansiedad en 3 minutos",
+  "description": "Ejercicios de respiración para calmar la ansiedad en 3 minutos. Gratis, sin registro.",
   "url": "https://calmaen3minutos.com",
   "applicationCategory": "HealthApplication",
   "operatingSystem": "Web",
@@ -22,86 +14,303 @@ const schema = {
 ---
 
 <BaseLayout 
-  title="Ejercicios de Respiración para Ansiedad | Calma en 3 Minutos"
-  description="Calma tu ansiedad en 3 minutos con ejercicios de respiración científicamente probados. Técnica 4-7-8, coherencia cardíaca y box breathing. Gratis, sin registro."
+  title="Calma tu Ansiedad en 3 Minutos | Ejercicios de Respiración"
+  description="Botón de calma inmediata. Ejercicios de respiración científicamente probados para crisis de ansiedad. 4-7-8, box breathing, diafragmática. Gratis, sin registro."
   canonical="https://calmaen3minutos.com/"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
-  <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-    <!-- Hero -->
-    <section class="pt-32 pb-16 px-4 text-center">
-      <div class="max-w-4xl mx-auto">
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">
-          Calma tu Ansiedad en 3 Minutos
-        </h1>
-        <p class="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-          Ejercicios de respiración científicamente probados para reducir el estrés y controlar crisis de ansiedad.
-        </p>
-        <div class="flex flex-wrap justify-center gap-4">
-          <a href="/tecnica/4-7-8/" class="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-xl transition-colors">
-            Empezar Ahora
-          </a>
-          <a href="#techniques" class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl transition-colors">
-            Ver Técnicas
-          </a>
-        </div>
+  <!-- Pantalla completa: Botón de Pánico -->
+  <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center px-4">
+    
+    <!-- Logo minimalista -->
+    <div class="mb-8">
+      <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center animate-pulse">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
       </div>
-    </section>
+    </div>
 
-    <!-- Techniques Grid -->
-    <section id="techniques" class="py-16 px-4">
-      <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl font-bold text-white text-center mb-12">Técnicas de Respiración</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-          {techniques.map(tech => (
-            <a href={`/tecnica/${tech.id}/`} class="block p-6 bg-slate-800/50 rounded-2xl border border-slate-700 hover:border-teal-500 transition-all hover:scale-105">
-              <div class="text-4xl mb-4">{tech.icon}</div>
-              <h3 class="text-xl font-bold text-white mb-2">{tech.name}</h3>
-              <p class="text-slate-400 mb-4">{tech.description}</p>
-              <div class="flex items-center gap-2 text-teal-400">
-                <span>⏱️</span>
-                <span>{tech.time}</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
+    <!-- Mensaje principal -->
+    <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-4">
+      Calma Ahora
+    </h1>
+    <p class="text-xl text-slate-400 text-center mb-12 max-w-md">
+      Tómate un respiro. Estás a un clic de tranquilidad.
+    </p>
 
-    <!-- Benefits -->
-    <section class="py-16 px-4 bg-slate-800/30">
-      <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl font-bold text-white text-center mb-12">¿Por Qué Funciona?</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-          <div class="text-center">
-            <div class="text-5xl mb-4">🔬</div>
-            <h3 class="text-xl font-bold text-white mb-2">Científicamente Probado</h3>
-            <p class="text-slate-400">Técnicas respaldadas por investigación científica y utilizadas por profesionales.</p>
-          </div>
-          <div class="text-center">
-            <div class="text-5xl mb-4">⚡</div>
-            <h3 class="text-xl font-bold text-white mb-2">Rápido y Efectivo</h3>
-            <p class="text-slate-400">Resultados en 3 minutos. Perfecto para momentos de estrés o ansiedad.</p>
-          </div>
-          <div class="text-center">
-            <div class="text-5xl mb-4">🆓</div>
-            <h3 class="text-xl font-bold text-white mb-2">100% Gratis</h3>
-            <p class="text-slate-400">Sin registro, sin downloads, sin costos. Accesible desde cualquier dispositivo.</p>
-          </div>
-        </div>
+    <!-- BOTÓN PRINCIPAL - El "Botón de Pánico" -->
+    <button 
+      id="panic-button"
+      class="group relative w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-teal-500/30 hover:shadow-teal-500/50 focus:outline-none focus:ring-4 focus:ring-teal-400/50"
+    >
+      <!-- Anillo exterior animado -->
+      <div class="absolute inset-0 rounded-full border-4 border-teal-400/30 animate-ping"></div>
+      
+      <!-- Texto del botón -->
+      <div class="absolute inset-0 flex flex-col items-center justify-center">
+        <span class="text-5xl md:text-7xl font-bold text-white mb-2">3</span>
+        <span class="text-lg md:text-xl text-white/90 font-medium">min</span>
       </div>
-    </section>
+    </button>
 
-    <!-- CTA -->
-    <section class="py-16 px-4 text-center">
-      <div class="max-w-2xl mx-auto">
-        <h2 class="text-3xl font-bold text-white mb-4">¿Listo para Calmar tu Ansiedad?</h2>
-        <p class="text-slate-400 mb-8">Empieza ahora con la técnica 4-7-8, la más recomendada para principiantes.</p>
-        <a href="/tecnica/4-7-8/" class="inline-flex items-center gap-2 px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white font-bold text-lg rounded-xl transition-colors">
-          Empezar con 4-7-8 →
-        </a>
-      </div>
-    </section>
+    <!-- Instrucción -->
+    <p class="mt-8 text-slate-500 text-sm animate-bounce">
+      Toca para empezar
+    </p>
+
+    <!-- Selector rápido de técnica (oculto hasta que decida) -->
+    <div id="technique-selector" class="hidden mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-lg">
+      <button data-technique="4-7-8" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500">
+        <span class="block text-lg mb-1">🫁</span>
+        4-7-8
+      </button>
+      <button data-technique="box" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500">
+        <span class="block text-lg mb-1">📦</span>
+        Box
+      </button>
+      <button data-technique="diafragmatica" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500">
+        <span class="block text-lg mb-1">💪</span>
+        Diafragmática
+      </button>
+      <button data-technique="nasal" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500">
+        <span class="block text-lg mb-1">🧘</span>
+        Nasal
+      </button>
+    </div>
   </main>
+
+  <!-- Lógica del Botón de Pánico -->
+  <script>
+    const panicButton = document.getElementById('panic-button');
+    const selector = document.getElementById('technique-selector');
+    
+    // Configuraciones de técnicas
+    const techniques = {
+      '4-7-8': { inhale: 4, hold: 7, exhale: 8, name: '4-7-8' },
+      'box': { inhale: 4, hold: 4, exhale: 4, holdEmpty: 4, name: 'Box Breathing' },
+      'diafragmatica': { inhale: 4, hold: 0, exhale: 6, name: 'Diafragmática' },
+      'nasal': { inhale: 4, hold: 2, exhale: 4, name: 'Nasal Alternante' }
+    };
+
+    let selectedTechnique = '4-7-8'; // Default
+
+    // Click en botón principal = empezar con default
+    panicButton?.addEventListener('click', () => {
+      startBreathing(selectedTechnique);
+    });
+
+    // Selección de técnica
+    document.querySelectorAll('.technique-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectedTechnique = btn.dataset.technique;
+        startBreathing(selectedTechnique);
+      });
+    });
+
+    function startBreathing(techniqueId) {
+      const config = techniques[techniqueId];
+      
+      // Crear overlay de ejercicio
+      const overlay = document.createElement('div');
+      overlay.id = 'breathing-overlay';
+      overlay.className = 'fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex flex-col items-center justify-center';
+      
+      overlay.innerHTML = `
+        <div class="text-center">
+          <!-- Círculo de respiración -->
+          <div id="breathing-circle" class="w-48 h-48 md:w-64 md:h-64 rounded-full border-8 border-teal-400 mx-auto mb-8 transition-transform duration-1000 ease-in-out">
+            <div class="w-full h-full rounded-full bg-teal-400/20 flex items-center justify-center">
+              <span id="phase-text" class="text-2xl md:text-3xl font-bold text-white">Preparado</span>
+            </div>
+          </div>
+          
+          <!-- Timer -->
+          <div id="timer" class="text-5xl md:text-6xl font-bold text-white mb-4">3:00</div>
+          
+          <!-- Fase actual -->
+          <p id="instruction" class="text-xl text-teal-400 mb-8">Toca para empezar</p>
+          
+          <!-- Controles -->
+          <div class="flex gap-4 justify-center">
+            <button id="start-btn" class="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-xl transition-colors">
+              ▶ Empezar
+            </button>
+            <button id="close-btn" class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl transition-colors">
+              ✕ Cerrar
+            </button>
+          </div>
+          
+          <!-- Info de técnica -->
+          <p class="mt-8 text-slate-500 text-sm">${config.name}: ${config.inhale}-${config.hold || 0}-${config.exhale}</p>
+        </div>
+      `;
+      
+      document.body.appendChild(overlay);
+      
+      // Lógica de respiración
+      let isPlaying = false;
+      let interval;
+      let totalSeconds = 180; // 3 minutos
+      let currentPhase = 'idle';
+      
+      const phaseText = document.getElementById('phase-text');
+      const timerText = document.getElementById('timer');
+      const instructionText = document.getElementById('instruction');
+      const circle = document.getElementById('breathing-circle');
+      const startBtn = document.getElementById('start-btn');
+      const closeBtn = document.getElementById('close-btn');
+      
+      function updateTimer() {
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        timerText.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+        
+        if (totalSeconds <= 0) {
+          stopBreathing();
+          phaseText.textContent = '¡Completado!';
+          instructionText.textContent = 'Has terminado. Respira normalmente.';
+          circle.style.transform = 'scale(1)';
+          circle.style.borderColor = '#10b981';
+        }
+      }
+      
+      function startPhase(phase, duration) {
+        currentPhase = phase;
+        const endTime = Date.now() + duration * 1000;
+        
+        if (phase === 'inhale') {
+          phaseText.textContent = 'Inhala';
+          instructionText.textContent = `Inhala por la nariz (${config.inhale}s)`;
+          circle.style.transform = 'scale(1.3)';
+          circle.style.borderColor = '#14b8a6';
+        } else if (phase === 'hold') {
+          phaseText.textContent = 'Sostén';
+          instructionText.textContent = `Sostén la respiración (${config.hold}s)`;
+          circle.style.borderColor = '#f59e0b';
+        } else if (phase === 'exhale') {
+          phaseText.textContent = 'Exhala';
+          instructionText.textContent = `Exhala lentamente (${config.exhale}s)`;
+          circle.style.transform = 'scale(1)';
+          circle.style.borderColor = '#06b6d4';
+        } else if (phase === 'holdEmpty') {
+          phaseText.textContent = 'Vacío';
+          instructionText.textContent = 'Mantén vacío';
+          circle.style.borderColor = '#8b5cf6';
+        }
+        
+        return endTime;
+      }
+      
+      function runCycle() {
+        if (!isPlaying || totalSeconds <= 0) return;
+        
+        let endTime;
+        
+        // Fase 1: Inhalar
+        endTime = startPhase('inhale', config.inhale);
+        const inhaleInterval = setInterval(() => {
+          if (Date.now() >= endTime || !isPlaying) {
+            clearInterval(inhaleInterval);
+            if (isPlaying && totalSeconds > 0) runHold();
+          }
+        }, 100);
+      }
+      
+      function runHold() {
+        if (!isPlaying || totalSeconds <= 0 || !config.hold) {
+          runExhale();
+          return;
+        }
+        
+        let endTime = startPhase('hold', config.hold);
+        const holdInterval = setInterval(() => {
+          if (Date.now() >= endTime || !isPlaying) {
+            clearInterval(holdInterval);
+            if (isPlaying && totalSeconds > 0) runExhale();
+          }
+        }, 100);
+      }
+      
+      function runExhale() {
+        if (!isPlaying || totalSeconds <= 0) return;
+        
+        let endTime = startPhase('exhale', config.exhale);
+        const exhaleInterval = setInterval(() => {
+          if (Date.now() >= endTime || !isPlaying) {
+            clearInterval(exhaleInterval);
+            if (isPlaying && totalSeconds > 0) {
+              if (config.holdEmpty) {
+                runHoldEmpty();
+              } else {
+                runCycle();
+              }
+            }
+          }
+        }, 100);
+      }
+      
+      function runHoldEmpty() {
+        if (!isPlaying || totalSeconds <= 0 || !config.holdEmpty) {
+          runCycle();
+          return;
+        }
+        
+        let endTime = startPhase('holdEmpty', config.holdEmpty);
+        const emptyInterval = setInterval(() => {
+          if (Date.now() >= endTime || !isPlaying) {
+            clearInterval(emptyInterval);
+            if (isPlaying && totalSeconds > 0) runCycle();
+          }
+        }, 100);
+      }
+      
+      function startBreathingExercise() {
+        isPlaying = true;
+        totalSeconds = 180;
+        startBtn.textContent = '⏸ Pausar';
+        runCycle();
+        
+        interval = setInterval(() => {
+          totalSeconds--;
+          updateTimer();
+        }, 1000);
+      }
+      
+      function pauseBreathing() {
+        isPlaying = false;
+        clearInterval(interval);
+        startBtn.textContent = '▶ Continuar';
+        phaseText.textContent = 'Pausado';
+      }
+      
+      function stopBreathing() {
+        isPlaying = false;
+        clearInterval(interval);
+        startBtn.textContent = '▶ Empezar';
+        phaseText.textContent = 'Preparado';
+        circle.style.transform = 'scale(1)';
+        circle.style.borderColor = '#2dd4bf';
+        totalSeconds = 180;
+        updateTimer();
+      }
+      
+      startBtn.addEventListener('click', () => {
+        if (isPlaying) {
+          pauseBreathing();
+        } else {
+          startBreathingExercise();
+        }
+      });
+      
+      closeBtn.addEventListener('click', () => {
+        stopBreathing();
+        overlay.remove();
+      });
+      
+      updateTimer();
+    }
+  </script>
 </BaseLayout>
