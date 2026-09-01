@@ -5,241 +5,342 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Calma en 3 Minutos",
-  "description": "Ejercicios de respiración para calmar la ansiedad en 3 minutos. Gratis, sin registro.",
+  "description": "Ejercicios de respiración para calmar la ansiedad en 3 minutos.",
   "url": "https://calmaen3minutos.com",
-  "applicationCategory": "HealthApplication",
-  "operatingSystem": "Web",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+  "applicationCategory": "HealthApplication"
 };
 ---
 
 <BaseLayout 
   title="Calma tu Ansiedad en 3 Minutos | Ejercicios de Respiración"
-  description="Botón de calma inmediata. Ejercicios de respiración científicamente probados para crisis de ansiedad. 4-7-8, box breathing, diafragmática. Gratis, sin registro."
+  description="Ejercicios de respiración para crisis de ansiedad. 4-7-8, box breathing, diafragmática. Gratis."
   canonical="https://calmaen3minutos.com/"
 >
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
-  <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center px-4">
+  <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center px-4 select-none">
     
-    <!-- Logo minimalista -->
-    <div class="mb-8">
-      <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center animate-pulse">
-        <img src="/icons/lungs.svg" alt="" class="w-8 h-8 text-white" />
+    <!-- Pantalla inicial: Botón de Pánico -->
+    <div id="home-screen" class="flex flex-col items-center justify-center">
+      <div class="mb-8 opacity-60">
+        <img src="/icons/lungs.svg" alt="" class="w-12 h-12 text-teal-400" />
       </div>
+      
+      <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-4">Calma Ahora</h1>
+      <p class="text-lg text-slate-400 text-center mb-10 max-w-sm">Tómate un respiro.</p>
+
+      <!-- Botón principal - grande, redondo, fácil de tocar en móvil -->
+      <button 
+        id="start-btn"
+        class="relative w-44 h-44 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 shadow-2xl shadow-teal-500/40 active:scale-95 transition-transform duration-150 focus:outline-none focus:ring-4 focus:ring-teal-400/50"
+        aria-label="Empezar ejercicio de respiración"
+      >
+        <!-- Pulso exterior -->
+        <div class="absolute inset-0 rounded-full border-2 border-teal-400/20 animate-pulse pointer-events-none"></div>
+        <div class="absolute inset-[-8px] rounded-full border border-teal-400/10 animate-pulse pointer-events-none" style="animation-delay: 0.5s"></div>
+        
+        <!-- Icono play centrado -->
+        <div class="absolute inset-0 flex items-center justify-center">
+          <img src="/icons/play.svg" alt="" class="w-14 h-14 md:w-16 md:h-16 text-white ml-1" />
+        </div>
+      </button>
+
+      <p class="mt-8 text-slate-600 text-xs tracking-wider uppercase">Toca para empezar</p>
     </div>
 
-    <!-- Mensaje principal -->
-    <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-4">
-      Calma Ahora
-    </h1>
-    <p class="text-xl text-slate-400 text-center mb-12 max-w-md">
-      Tómate un respiro. Estás a un clic de tranquilidad.
-    </p>
+    <!-- Pantalla de ejercicio -->
+    <div id="exercise-screen" class="hidden flex flex-col items-center justify-center w-full max-w-sm mx-auto">
+      
+      <!-- Nombre de la tecnica -->
+      <p id="technique-name" class="text-sm text-slate-500 uppercase tracking-widest mb-6">4-7-8</p>
 
-    <!-- BOTON PRINCIPAL -->
-    <button 
-      id="panic-button"
-      class="group relative w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-teal-500/30 hover:shadow-teal-500/50 focus:outline-none focus:ring-4 focus:ring-teal-400/50"
-    >
-      <div class="absolute inset-0 rounded-full border-4 border-teal-400/30 animate-ping"></div>
-      <div class="absolute inset-0 flex flex-col items-center justify-center">
-        <span class="text-5xl md:text-7xl font-bold text-white mb-2">3</span>
-        <span class="text-lg md:text-xl text-white/90 font-medium">min</span>
+      <!-- Circulo de respiracion con progreso -->
+      <div class="relative w-64 h-64 md:w-72 md:h-72 mb-8">
+        <!-- SVG Circulo de progreso -->
+        <svg class="w-full h-full -rotate-90" viewBox="0 0 200 200">
+          <!-- Circulo de fondo -->
+          <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(45,212,191,0.1)" stroke-width="6" />
+          <!-- Circulo de progreso -->
+          <circle 
+            id="progress-ring" 
+            cx="100" cy="100" r="90" 
+            fill="none" 
+            stroke="#2dd4bf" 
+            stroke-width="6"
+            stroke-linecap="round"
+            stroke-dasharray="565.48"
+            stroke-dashoffset="565.48"
+            style="transition: stroke-dashoffset 0.3s linear, stroke 0.3s ease"
+          />
+        </svg>
+        
+        <!-- Circulo interior que late con la respiracion -->
+        <div class="absolute inset-6 rounded-full bg-teal-400/10 border border-teal-400/20 flex items-center justify-center overflow-hidden">
+          <div 
+            id="breath-orb" 
+            class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-teal-400/40 to-cyan-500/40 flex items-center justify-center transition-all ease-in-out"
+            style="transition-duration: 4s"
+          >
+            <span id="seconds-display" class="text-4xl md:text-5xl font-bold text-white">4</span>
+          </div>
+        </div>
       </div>
-    </button>
 
-    <p class="mt-8 text-slate-500 text-sm animate-bounce">
-      Toca para empezar
-    </p>
+      <!-- Instruction textual -->
+      <p id="phase-text" class="text-2xl md:text-3xl font-semibold text-white mb-2 h-10">Inhala</p>
+      <p id="phase-subtext" class="text-sm text-slate-500 mb-8">por la nariz</p>
 
-    <!-- Selector rapido de tecnica -->
-    <div id="technique-selector" class="hidden mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-lg">
-      <button data-technique="4-7-8" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500 flex flex-col items-center gap-2">
-        <img src="/icons/lungs.svg" alt="" class="w-6 h-6" />
-        4-7-8
-      </button>
-      <button data-technique="box" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500 flex flex-col items-center gap-2">
-        <img src="/icons/brain.svg" alt="" class="w-6 h-6" />
-        Box
-      </button>
-      <button data-technique="diafragmatica" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500 flex flex-col items-center gap-2">
-        <img src="/icons/heart.svg" alt="" class="w-6 h-6" />
-        Diafragmatica
-      </button>
-      <button data-technique="nasal" class="technique-btn px-4 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white text-sm transition-colors border border-slate-700 hover:border-teal-500 flex flex-col items-center gap-2">
-        <img src="/icons/nose.svg" alt="" class="w-6 h-6" />
-        Nasal
-      </button>
+      <!-- Timer total -->
+      <div class="flex items-center gap-2 text-slate-500 mb-8">
+        <img src="/icons/clock.svg" alt="" class="w-4 h-4" />
+        <span id="total-timer" class="text-sm font-mono">3:00</span>
+      </div>
+
+      <!-- Controles -->
+      <div class="flex gap-3">
+        <button id="pause-btn" class="w-14 h-14 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors border border-slate-700" aria-label="Pausar">
+          <img src="/icons/pause.svg" alt="" class="w-5 h-5 text-white" />
+        </button>
+        <button id="stop-btn" class="w-14 h-14 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors border border-slate-700" aria-label="Detener">
+          <img src="/icons/x.svg" alt="" class="w-5 h-5 text-white" />
+        </button>
+      </div>
     </div>
   </main>
 
-  <!-- Logica del Boton de Panico -->
   <script>
-    const panicButton = document.getElementById('panic-button');
-    const techniques = {
-      '4-7-8': { inhale: 4, hold: 7, exhale: 8, name: '4-7-8', icon: '/icons/lungs.svg' },
-      'box': { inhale: 4, hold: 4, exhale: 4, holdEmpty: 4, name: 'Box Breathing', icon: '/icons/brain.svg' },
-      'diafragmatica': { inhale: 4, hold: 0, exhale: 6, name: 'Diafragmatica', icon: '/icons/heart.svg' },
-      'nasal': { inhale: 4, hold: 2, exhale: 4, name: 'Nasal Alternante', icon: '/icons/nose.svg' }
+    // Configuraciones de tecnicas
+    const TECHNIQUES = {
+      '4-7-8': { inhale: 4, hold: 7, exhale: 8, name: '4-7-8' },
+      'box': { inhale: 4, hold: 4, exhale: 4, holdEmpty: 4, name: 'Box Breathing' },
+      'diafragmatica': { inhale: 4, hold: 0, exhale: 6, name: 'Diafragmatica' },
+      'nasal': { inhale: 4, hold: 2, exhale: 4, name: 'Nasal Alternante' }
     };
 
-    let selectedTechnique = '4-7-8';
+    const CONFIG = TECHNIQUES['4-7-8']; // Default
+    const TOTAL_DURATION = 180; // 3 minutos en segundos
+    const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 90; // r=90
 
-    panicButton?.addEventListener('click', () => {
-      startBreathing(selectedTechnique);
-    });
+    // Elementos DOM
+    const homeScreen = document.getElementById('home-screen');
+    const exerciseScreen = document.getElementById('exercise-screen');
+    const startBtn = document.getElementById('start-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const breathOrb = document.getElementById('breath-orb');
+    const progressRing = document.getElementById('progress-ring');
+    const secondsDisplay = document.getElementById('seconds-display');
+    const phaseText = document.getElementById('phase-text');
+    const phaseSubtext = document.getElementById('phase-subtext');
+    const totalTimer = document.getElementById('total-timer');
+    const techniqueName = document.getElementById('technique-name');
 
-    document.querySelectorAll('.technique-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        selectedTechnique = btn.dataset.technique;
-        startBreathing(selectedTechnique);
-      });
-    });
+    // Estado
+    let isPlaying = false;
+    let isPaused = false;
+    let secondsRemaining = TOTAL_DURATION;
+    let totalTimerInterval = null;
+    let phaseTimeout = null;
+    let cycleTimeout = null;
 
-    function startBreathing(techniqueId) {
-      const config = techniques[techniqueId];
-      
-      const overlay = document.createElement('div');
-      overlay.id = 'breathing-overlay';
-      overlay.className = 'fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex flex-col items-center justify-center';
-      
-      overlay.innerHTML = `
-        <div class="text-center">
-          <div id="breathing-circle" class="w-48 h-48 md:w-64 md:h-64 rounded-full border-8 border-teal-400 mx-auto mb-8 transition-all duration-1000 ease-in-out flex items-center justify-center">
-            <img src="${config.icon}" alt="" class="w-16 h-16 text-teal-400" />
-          </div>
-          
-          <div id="timer" class="text-5xl md:text-6xl font-bold text-white mb-4">3:00</div>
-          <p id="instruction" class="text-xl text-teal-400 mb-8">Toca para empezar</p>
-          
-          <div class="flex gap-4 justify-center">
-            <button id="start-btn" class="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded-xl transition-colors flex items-center gap-2">
-              <img src="/icons/play.svg" alt="" class="w-5 h-5" /> Empezar
-            </button>
-            <button id="close-btn" class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl transition-colors flex items-center gap-2">
-              <img src="/icons/x.svg" alt="" class="w-5 h-5" /> Cerrar
-            </button>
-          </div>
-          
-          <p class="mt-8 text-slate-500 text-sm">${config.name}: ${config.inhale}-${config.hold || 0}-${config.exhale}</p>
-        </div>
-      `;
-      
-      document.body.appendChild(overlay);
-      
-      let isPlaying = false;
-      let interval;
-      let totalSeconds = 180;
-      
-      const phaseText = overlay.querySelector('#instruction');
-      const timerText = overlay.querySelector('#timer');
-      const circle = overlay.querySelector('#breathing-circle');
-      const startBtn = overlay.querySelector('#start-btn');
-      const closeBtn = overlay.querySelector('#close-btn');
-      
-      function updateTimer() {
-        const mins = Math.floor(totalSeconds / 60);
-        const secs = totalSeconds % 60;
-        timerText.textContent = mins + ':' + secs.toString().padStart(2, '0');
-        if (totalSeconds <= 0) {
-          stop();
-          phaseText.textContent = 'Completado';
-          circle.style.transform = 'scale(1)';
-          circle.style.borderColor = '#10b981';
-        }
-      }
-      
-      function startPhase(phase, duration) {
-        if (phase === 'inhale') {
-          phaseText.textContent = 'Inhala';
-          circle.style.transform = 'scale(1.3)';
-          circle.style.borderColor = '#14b8a6';
-        } else if (phase === 'hold') {
-          phaseText.textContent = 'Sostén';
-          circle.style.borderColor = '#f59e0b';
-        } else if (phase === 'exhale') {
-          phaseText.textContent = 'Exhala';
-          circle.style.transform = 'scale(1)';
-          circle.style.borderColor = '#06b6d4';
-        } else if (phase === 'holdEmpty') {
-          phaseText.textContent = 'Vacío';
-          circle.style.borderColor = '#8b5cf6';
-        }
-      }
-      
-      function runCycle() {
-        if (!isPlaying || totalSeconds <= 0) return;
-        
-        phaseText.textContent = 'Inhala';
-        circle.style.transform = 'scale(1.3)';
-        circle.style.borderColor = '#14b8a6';
-        
-        setTimeout(() => {
-          if (!isPlaying || totalSeconds <= 0) return;
-          if (config.hold) {
-            phaseText.textContent = 'Sostén';
-            circle.style.borderColor = '#f59e0b';
-            setTimeout(() => {
-              if (!isPlaying || totalSeconds <= 0) return;
-              runExhale();
-            }, config.hold * 1000);
-          } else {
-            runExhale();
-          }
-        }, config.inhale * 1000);
-      }
-      
-      function runExhale() {
-        if (!isPlaying || totalSeconds <= 0) return;
-        phaseText.textContent = 'Exhala';
-        circle.style.transform = 'scale(1)';
-        circle.style.borderColor = '#06b6d4';
-        
-        setTimeout(() => {
-          if (!isPlaying || totalSeconds <= 0) return;
-          if (config.holdEmpty) {
-            phaseText.textContent = 'Vacío';
-            circle.style.borderColor = '#8b5cf6';
-            setTimeout(() => {
-              if (isPlaying && totalSeconds > 0) runCycle();
-            }, config.holdEmpty * 1000);
-          } else if (isPlaying && totalSeconds > 0) {
-            runCycle();
-          }
-        }, config.exhale * 1000);
-      }
-      
-      function start() {
-        isPlaying = true;
-        totalSeconds = 180;
-        startBtn.innerHTML = '<img src="/icons/pause.svg" alt="" class="w-5 h-5" /> Pausar';
-        runCycle();
-        interval = setInterval(() => { totalSeconds--; updateTimer(); }, 1000);
-      }
-      
-      function pause() {
-        isPlaying = false;
-        clearInterval(interval);
-        startBtn.innerHTML = '<img src="/icons/play.svg" alt="" class="w-5 h-5" /> Continuar';
-        phaseText.textContent = 'Pausado';
-      }
-      
-      function stop() {
-        isPlaying = false;
-        clearInterval(interval);
-        totalSeconds = 180;
-        startBtn.innerHTML = '<img src="/icons/play.svg" alt="" class="w-5 h-5" /> Empezar';
-        phaseText.textContent = 'Preparado';
-        circle.style.transform = 'scale(1)';
-        circle.style.borderColor = '#2dd4bf';
-        updateTimer();
-      }
-      
-      startBtn.addEventListener('click', () => isPlaying ? pause() : start());
-      closeBtn.addEventListener('click', () => { stop(); overlay.remove(); });
-      updateTimer();
+    // Funciones
+    function formatTime(secs) {
+      const m = Math.floor(secs / 60);
+      const s = secs % 60;
+      return m + ':' + s.toString().padStart(2, '0');
     }
+
+    function updateProgress() {
+      const progress = (TOTAL_DURATION - secondsRemaining) / TOTAL_DURATION;
+      const offset = CIRCLE_CIRCUMFERENCE * (1 - progress);
+      progressRing.style.strokeDashoffset = offset;
+    }
+
+    function setPhase(phase, duration, color) {
+      // Actualizar texto
+      const labels = {
+        'inhale': { main: 'Inhala', sub: 'por la nariz', color: '#2dd4bf' },
+        'hold': { main: 'Sostén', sub: 'mantén', color: '#f59e0b' },
+        'exhale': { main: 'Exhala', sub: 'lentamente', color: '#06b6d4' },
+        'holdEmpty': { main: 'Vacío', sub: 'respira', color: '#8b5cf6' }
+      };
+      
+      const label = labels[phase] || labels['inhale'];
+      phaseText.textContent = label.main;
+      phaseSubtext.textContent = label.sub;
+      progressRing.style.stroke = label.color;
+      
+      // Animar circulo
+      if (phase === 'inhale') {
+        breathOrb.style.transform = 'scale(1.4)';
+        breathOrb.style.transitionDuration = duration + 's';
+        breathOrb.style.background = 'linear-gradient(135deg, rgba(45,212,191,0.5), rgba(6,182,212,0.5))';
+      } else if (phase === 'exhale') {
+        breathOrb.style.transform = 'scale(1)';
+        breathOrb.style.transitionDuration = duration + 's';
+        breathOrb.style.background = 'linear-gradient(135deg, rgba(45,212,191,0.3), rgba(6,182,212,0.3))';
+      } else if (phase === 'hold' || phase === 'holdEmpty') {
+        // Mantener tamaño actual
+        breathOrb.style.transitionDuration = '0.3s';
+      }
+      
+      // Countdown en el circulo
+      let count = duration;
+      secondsDisplay.textContent = count;
+      const countInterval = setInterval(() => {
+        if (!isPlaying || isPaused) {
+          clearInterval(countInterval);
+          return;
+        }
+        count--;
+        if (count >= 0) secondsDisplay.textContent = count;
+      }, 1000);
+      
+      return duration * 1000;
+    }
+
+    function runCycle() {
+      if (!isPlaying || secondsRemaining <= 0) return;
+      
+      // Fase 1: Inhalar
+      let duration = setPhase('inhale', CONFIG.inhale);
+      phaseTimeout = setTimeout(() => {
+        if (!isPlaying || secondsRemaining <= 0) return;
+        
+        // Fase 2: Sostener (si existe)
+        if (CONFIG.hold > 0) {
+          duration = setPhase('hold', CONFIG.hold);
+          phaseTimeout = setTimeout(() => {
+            if (!isPlaying || secondsRemaining <= 0) return;
+            runExhale();
+          }, duration);
+        } else {
+          runExhale();
+        }
+      }, duration);
+    }
+
+    function runExhale() {
+      if (!isPlaying || secondsRemaining <= 0) return;
+      
+      let duration = setPhase('exhale', CONFIG.exhale);
+      phaseTimeout = setTimeout(() => {
+        if (!isPlaying || secondsRemaining <= 0) return;
+        
+        // Fase 4: Vacio (si existe)
+        if (CONFIG.holdEmpty && CONFIG.holdEmpty > 0) {
+          duration = setPhase('holdEmpty', CONFIG.holdEmpty);
+          phaseTimeout = setTimeout(() => {
+            if (isPlaying && secondsRemaining > 0) runCycle();
+          }, duration);
+        } else {
+          if (isPlaying && secondsRemaining > 0) runCycle();
+        }
+      }, duration);
+    }
+
+    function startExercise() {
+      // Mostrar pantalla de ejercicio
+      homeScreen.classList.add('hidden');
+      exerciseScreen.classList.remove('hidden');
+      exerciseScreen.classList.add('flex');
+      
+      // Reset estado
+      isPlaying = true;
+      isPaused = false;
+      secondsRemaining = TOTAL_DURATION;
+      techniqueName.textContent = CONFIG.name;
+      
+      // Actualizar UI
+      pauseBtn.querySelector('img').src = '/icons/pause.svg';
+      totalTimer.textContent = formatTime(secondsRemaining);
+      secondsDisplay.textContent = CONFIG.inhale;
+      phaseText.textContent = 'Inhala';
+      phaseSubtext.textContent = 'por la nariz';
+      
+      // Empezar timer total
+      totalTimerInterval = setInterval(() => {
+        if (isPlaying && !isPaused) {
+          secondsRemaining--;
+          totalTimer.textContent = formatTime(secondsRemaining);
+          updateProgress();
+          
+          if (secondsRemaining <= 0) {
+            completeExercise();
+          }
+        }
+      }, 1000);
+      
+      // Empezar ciclo de respiracion
+      runCycle();
+    }
+
+    function pauseExercise() {
+      if (isPaused) {
+        // Resume
+        isPaused = false;
+        pauseBtn.querySelector('img').src = '/icons/pause.svg';
+        phaseText.textContent = 'Continuando...';
+        runCycle();
+      } else {
+        // Pause
+        isPaused = true;
+        pauseBtn.querySelector('img').src = '/icons/play.svg';
+        phaseText.textContent = 'Pausado';
+        phaseSubtext.textContent = 'toca para continuar';
+        clearTimeout(phaseTimeout);
+        clearTimeout(cycleTimeout);
+        breathOrb.style.transitionDuration = '0.3s';
+      }
+    }
+
+    function stopExercise() {
+      isPlaying = false;
+      isPaused = false;
+      clearInterval(totalTimerInterval);
+      clearTimeout(phaseTimeout);
+      clearTimeout(cycleTimeout);
+      
+      // Reset circulo
+      breathOrb.style.transform = 'scale(1)';
+      breathOrb.style.transitionDuration = '0.5s';
+      breathOrb.style.background = 'linear-gradient(135deg, rgba(45,212,191,0.4), rgba(6,182,212,0.4))';
+      progressRing.style.strokeDashoffset = CIRCLE_CIRCUMFERENCE;
+      progressRing.style.stroke = '#2dd4bf';
+      secondsDisplay.textContent = CONFIG.inhale;
+      phaseText.textContent = 'Inhala';
+      phaseSubtext.textContent = 'por la nariz';
+      totalTimer.textContent = formatTime(TOTAL_DURATION);
+      secondsRemaining = TOTAL_DURATION;
+      
+      // Volver a home
+      exerciseScreen.classList.add('hidden');
+      exerciseScreen.classList.remove('flex');
+      homeScreen.classList.remove('hidden');
+      homeScreen.classList.add('flex');
+    }
+
+    function completeExercise() {
+      isPlaying = false;
+      clearInterval(totalTimerInterval);
+      clearTimeout(phaseTimeout);
+      
+      phaseText.textContent = 'Completado';
+      phaseSubtext.textContent = 'bien hecho';
+      secondsDisplay.textContent = '';
+      breathOrb.style.transform = 'scale(1)';
+      breathOrb.style.background = 'linear-gradient(135deg, rgba(16,185,129,0.5), rgba(5,150,105,0.5))';
+      progressRing.style.stroke = '#10b981';
+      
+      // Auto-volver a home despues de 3 segundos
+      setTimeout(() => {
+        stopExercise();
+      }, 3000);
+    }
+
+    // Event listeners
+    startBtn.addEventListener('click', startExercise);
+    pauseBtn.addEventListener('click', pauseExercise);
+    stopBtn.addEventListener('click', stopExercise);
   </script>
 </BaseLayout>
