@@ -3,4 +3,6 @@
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  # Content-Security-Policy: generada por 'site-pipeline build --csp-hashes'
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), browsing-topics=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://app.loops.so; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  # NOTA: CSP base. Sustituir por la versión con hashes de 'site-pipeline build dist --csp-hashes' antes del deploy final para quitar 'unsafe-inline' en script-src.
