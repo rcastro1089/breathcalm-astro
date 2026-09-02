@@ -133,7 +133,7 @@ const faqSchema = {
   </div>
 
   <!-- Modal de captura de email (post-ejercicio) -->
-  <div id="email-modal" hidden class="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center p-4">
+  <div id="email-modal" class="hidden fixed inset-0 z-[60] bg-black/70 items-center justify-center p-4">
     <div class="w-full max-w-sm rounded-2xl bg-slate-800 border border-slate-700 p-6 text-center">
       <p class="text-xl font-bold text-white mb-1">Lo lograste</p>
       <p class="text-sm text-slate-300 mb-5">Has respirado unos minutos. Si el pulso sigue alto, repítelo: no hay límite.</p>
@@ -154,8 +154,8 @@ const faqSchema = {
 
   <script>
     const modal = document.getElementById('email-modal');
-    const openModal = () => { if (modal) modal.hidden = false; };
-    const closeModal = () => { if (modal) modal.hidden = true; };
+    const openModal = () => { modal?.classList.remove('hidden'); modal?.classList.add('flex'); };
+    const closeModal = () => { modal?.classList.add('hidden'); modal?.classList.remove('flex'); };
 
     document.addEventListener('bc:completed', () => setTimeout(openModal, 3500));
     document.getElementById('modal-close')?.addEventListener('click', closeModal);
