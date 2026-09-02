@@ -4,6 +4,9 @@ export const SITE = {
   name: 'Calma en 3 Minutos',
   domain: 'https://calmaen3minutos.com',
   contactEmail: 'hola@calmaen3minutos.com', // PENDIENTE: provisionar buzón (Cloudflare Email Routing)
+  // Alternativa a la verificación por archivo (que CF Pages rompe con el redirect .html).
+  // Pega aquí el content de la etiqueta HTML de GSC ("HTML tag" / "Etiqueta HTML").
+  gscVerification: '',
 };
 
 export const REVIEWER = {

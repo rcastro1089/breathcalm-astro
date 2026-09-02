@@ -1,3 +1,6 @@
+# Verificación de Google Search Console: servir el .html con 200 sin que CF Pages le quite la extensión
+/google3514111078058df4.html   /google3514111078058df4   200
+
 # Slugs antiguos -> nuevos (el sitio no estaba indexado; por si acaso)
 /tecnica/4-7-8/            /tecnica/respiracion-4-7-8/            301
 /tecnica/diafragmatica/    /tecnica/respiracion-diafragmatica/    301

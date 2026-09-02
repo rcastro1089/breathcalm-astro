@@ -6,6 +6,7 @@ import Analytics from "../components/Analytics.astro";
 import CookieBanner from "../components/CookieBanner.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import { SITE } from "../data/site";
 
 export interface Props {
   title: string;                 // <=60 chars idealmente, unico por pagina
@@ -68,6 +69,9 @@ const orgSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {SITE.gscVerification && (
+      <meta name="google-site-verification" content={SITE.gscVerification} />
+    )}
     <link rel="canonical" href={canonicalUrl} />
     <meta name="robots" content={robots} />
     <meta name="author" content="Ricardo Castro" />
