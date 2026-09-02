@@ -1,4 +1,21 @@
 {
-  "generatedBy": "TODO seo-keyword-research skill",
-  "topics": []
+  "generatedBy": "seo-keyword-research + dataforseo (2026-09-02)",
+  "markets": ["ES 2724", "MX 2484", "AR 2032", "CO 2170", "US 2840"],
+  "method": "Google Suggest multi-country discovery -> DataForSEO google_ads/search_volume/live",
+  "cost_usd": 1.17,
+  "full_report": "../../../web-audit/audits/calmaen3minutos.com/keyword-research/REPORT.md",
+  "home_primary_cluster": "crisis / ataque de ansiedad / ataque de panico",
+  "home_primary_volume_es_latam_est": 85000,
+  "clusters": [
+    {"name": "crisis/ataque", "vol_es_latam": 85000, "competition": "LOW", "target": "/"},
+    {"name": "ejercicios respiracion ansiedad", "vol_es_latam": 14000, "competition": "LOW-MEDIUM", "target": "/ #tecnicas"},
+    {"name": "respiracion diafragmatica", "vol_es_latam": 13000, "competition": "LOW", "target": "/tecnica/respiracion-diafragmatica/"},
+    {"name": "respiracion 4-7-8", "vol_es_latam": 4800, "competition": "LOW", "target": "/tecnica/respiracion-4-7-8/"},
+    {"name": "sueno/insomnio", "vol_es_latam": 4500, "competition": "LOW", "target": "/tecnica/respiracion-4-7-8/ + blog"},
+    {"name": "respiracion cuadrada / box breathing", "vol_es_latam": 2900, "competition": "LOW", "target": "/tecnica/respiracion-cuadrada/"},
+    {"name": "nadi shodhana / nasal alternante", "vol_es_latam": 2500, "competition": "LOW", "target": "/tecnica/respiracion-nasal-alternante/"},
+    {"name": "coherencia cardiaca", "vol_es_latam": 1400, "competition": "LOW", "target": "nueva tecnica o articulo"},
+    {"name": "labios fruncidos", "vol_es_latam": 600, "competition": "LOW", "target": "/tecnica/respiracion-labios-fruncidos/"},
+    {"name": "sintomas fisicos / autodiagnostico", "vol_es_latam": null, "competition": "LOW", "target": "blog", "note": "Ads=0 pero demanda real via autocomplete 5 paises"}
+  ]
 }
