@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE, REVIEWER } from '../../data/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => import.meta.env.PROD ? !data.draft : true);
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const url = `${SITE.domain}/blog/${post.slug}/`;
+const published = post.data.pubDate;
+const modified = post.data.updatedDate ?? post.data.pubDate;
+
+const fmt = (d: Date) => d.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  mainEntityOfPage: url,
+  url,
+  inLanguage: 'es',
+  datePublished: published.toISOString(),
+  dateModified: modified.toISOString(),
+  author: { '@type': 'Organization', name: SITE.name, url: `${SITE.domain}/` },
+  reviewedBy: {
+    '@type': 'Person',
+    name: REVIEWER.name,
+    jobTitle: 'Doctora en Medicina',
+    url: REVIEWER.linkedin,
+    identifier: REVIEWER.registration,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.name,
+    logo: { '@type': 'ImageObject', url: `${SITE.domain}/icons/logo.svg` },
+  },
+};
+---
+
+<BaseLayout title={`${post.data.title} | Calma en 3 Minutos`} description={post.data.description} path={`/blog/${post.slug}/`} ogType="article">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="bg-slate-900">
+    <article class="max-w-2xl mx-auto px-4 py-12">
+      <nav class="text-xs text-slate-500 mb-6" aria-label="Migas de pan">
+        <a href="/" class="hover:text-slate-300">Inicio</a> · <a href="/blog/" class="hover:text-slate-300">Blog</a>
+      </nav>
+
+      <h1 class="text-3xl md:text-4xl font-bold text-white leading-tight mb-4">{post.data.title}</h1>
+      <p class="text-xs text-slate-400 mb-8">
+        Por {SITE.name} · Revisado por <a href="/nosotros/#revision" class="text-slate-200 hover:text-white">{REVIEWER.name}</a>
+        {' '}· {post.data.updatedDate ? `Actualizado el ${fmt(modified)}` : `Publicado el ${fmt(published)}`}
+      </p>
+
+      <div class="prose-bc text-slate-300">
+        <Content />
+      </div>
+
+      <div class="mt-10 rounded-xl border border-slate-700 bg-slate-800/40 p-4">
+        <p class="text-sm text-slate-300">
+          Si necesitas calmarte ahora, <a href="/" class="text-teal-300 hover:text-teal-200">abre la respiración guiada</a>.
+          Y si los ataques se repiten, habla con un profesional: en el pie de página tienes líneas de ayuda por país.
+        </p>
+      </div>
+    </article>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  .prose-bc { line-height: 1.7; }
+  .prose-bc > * + * { margin-top: 1.1rem; }
+  .prose-bc h2 { color: #fff; font-weight: 700; font-size: 1.35rem; margin-top: 2.2rem; }
+  .prose-bc h3 { color: #fff; font-weight: 600; font-size: 1.1rem; margin-top: 1.6rem; }
+  .prose-bc a { color: #5eead4; text-decoration: underline; text-underline-offset: 2px; }
+  .prose-bc a:hover { color: #99f6e4; }
+  .prose-bc ul, .prose-bc ol { padding-left: 1.25rem; }
+  .prose-bc ul { list-style: disc; }
+  .prose-bc ol { list-style: decimal; }
+  .prose-bc li + li { margin-top: 0.4rem; }
+  .prose-bc strong { color: #f1f5f9; }
+  .prose-bc blockquote { border-left: 3px solid #2dd4bf; padding-left: 1rem; color: #cbd5e1; font-style: italic; }
+</style>
