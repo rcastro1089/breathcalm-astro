@@ -1,6 +1,7 @@
 ---
-// Generado por site-pipeline.
-const gaId = import.meta.env.PUBLIC_GA_ID;
+// GA4. El ID de medición es público (se expone en el cliente igualmente).
+// Se puede sobreescribir con la variable de entorno PUBLIC_GA_ID en CF Pages.
+const gaId = import.meta.env.PUBLIC_GA_ID || "G-CZ9EVCLYHH";
 ---
 {gaId && (
   <>

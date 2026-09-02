@@ -18,7 +18,7 @@ features:
     - FAQPage
     - BreadcrumbList
   hasBackend: false
-ga_id: ""
+ga_id: "G-CZ9EVCLYHH"
 deploy:
   target: cf-pages
   github_repo: rcastro1089/breathcalm-astro
