@@ -1,39 +1,108 @@
 ---
-// Generado por site-pipeline. El LLM (Hermes) rellena diseno y contenido.
+// Layout base. SEO cableado aqui (title/description/canonical/OG/twitter/schema).
+// Regla: canonical SIEMPRE se deriva de la URL real + Astro.site. Nunca se
+// concatena texto suelto (bug historico: "calmaen3minutos.comundefined").
 import Analytics from "../components/Analytics.astro";
 import CookieBanner from "../components/CookieBanner.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
 export interface Props {
-  title: string;        // <=60 chars, unico por pagina (lo verifica el QA gate)
-  description: string;  // 120-160 chars
-  path: string;         // ruta canonica, ej "/servicios/"
-  ogImage?: string;
+  title: string;                 // <=60 chars idealmente, unico por pagina
+  description: string;           // 120-160 chars, unico por pagina
+  path?: string;                 // ruta canonica explicita, ej "/tecnica/respiracion-4-7-8/"
+  canonical?: string;            // override absoluto opcional (compat con paginas antiguas)
+  ogImage?: string;              // ruta o URL absoluta
+  ogType?: string;               // "website" | "article"
+  noindex?: boolean;             // true -> noindex,nofollow
+  header?: boolean;              // pinta el <SiteHeader> (default true; la home lo omite)
 }
-const { title, description, path, ogImage = "/og-image.png" } = Astro.props;
-const site = Astro.site?.toString().replace(/\/$/, "") ?? "https://calmaen3minutos.com";
-const canonical = site + path;
-const ogImageUrl = ogImage.startsWith("http") ? ogImage : site + ogImage;
+
+const {
+  title,
+  description,
+  path,
+  canonical,
+  ogImage = "/og-image.png",
+  ogType = "website",
+  noindex = false,
+  header = true,
+} = Astro.props;
+
+// Base del sitio (de astro.config.ts). Fallback defensivo solo por si falta.
+const siteBase = Astro.site ?? new URL("https://calmaen3minutos.com/");
+
+// canonical: prioridad -> canonical explicito > path explicito > URL real de la pagina.
+// new URL(...) normaliza y evita dobles barras / "undefined".
+const rawPath = canonical ?? path ?? Astro.url.pathname;
+const canonicalUrl = new URL(rawPath, siteBase).href;
+
+const ogImageUrl = ogImage.startsWith("http")
+  ? ogImage
+  : new URL(ogImage, siteBase).href;
+
+const robots = noindex
+  ? "noindex,nofollow"
+  : "index,follow,max-image-preview:large,max-snippet:-1";
+
+const SITE_NAME = "Calma en 3 Minutos";
+
+// Schema.org sitewide: Organization. Las paginas añaden el suyo via <slot name="head">.
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE_NAME,
+  url: siteBase.href,
+  logo: new URL("/icons/logo.svg", siteBase).href,
+  description:
+    "Herramienta web gratuita de ejercicios de respiracion guiada para calmar crisis de ansiedad y ataques de panico. Sin registro, sin descarga.",
+  founder: { "@type": "Person", name: "Ricardo Castro" },
+  foundingDate: "2025",
+};
 ---
+
 <!DOCTYPE html>
-<html lang="es-SV">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content={robots} />
+    <meta name="author" content="Ricardo Castro" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(orgSchema)}
+    />
+
     <Analytics />
     <slot name="head" />
   </head>
-  <body>
+  <body class="bg-slate-900 text-slate-100">
+    {header && <SiteHeader />}
     <slot />
+    <SiteFooter />
     <CookieBanner />
   </body>
 </html>

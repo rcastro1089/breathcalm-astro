@@ -35,8 +35,14 @@ export interface UserStats {
   sessions: SessionData[];
 }
 
+export interface Citation {
+  text: string;
+  url: string;
+}
+
 export interface TechniquePageContent {
   slug: string;
+  techniqueId: string; // clave en BREATHING_TECHNIQUES (para lanzar el ejercicio con su patrón)
   seo: {
     title: string;
     description: string;
@@ -48,7 +54,11 @@ export interface TechniquePageContent {
     benefits: string[];
     whenToUse: string;
     steps: string[];
+    safety: string; // cuándo NO forzar la técnica (YMYL)
   };
+  faq: { q: string; a: string }[];
+  citations: Citation[];
+  lastReviewedDate: string; // ISO, revisión médica
   cta: {
     text: string;
     subtext: string;

@@ -1,4 +1,4 @@
-import { BreathingConfig } from "../components/types";
+import type { BreathingConfig } from "../components/types";
 
 export const BREATHING_TECHNIQUES: BreathingConfig[] = [
   {

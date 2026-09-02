@@ -1,60 +1,60 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import LanguageSwitcher from '../components/ui/LanguageSwitcher.tsx';
-
-const seo = {
-  title: "Términos de Servicio | Calma en 3 Minutos",
-  description: "Términos y condiciones de uso de Calma en 3 Minutos. Lee los términos antes de utilizar nuestro servicio.",
-  canonical: "https://calmaen3minutos.com/terminos/",
-};
+import { SITE } from '../data/site';
 ---
 
-<BaseLayout 
-  title={seo.title} 
-  description={seo.description}
-  canonical={seo.canonical}
+<BaseLayout
+  title="Términos de Servicio | Calma en 3 Minutos"
+  description="Condiciones de uso de Calma en 3 Minutos: una herramienta gratuita de respiración guiada para el bienestar que no sustituye la atención médica profesional."
+  path="/terminos/"
 >
-  <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-    <header class="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50">
-      <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-          </div>
-          <h1 class="text-xl font-bold text-white">Calma en 3 Minutos</h1>
-        </a>
-        <LanguageSwitcher client:load />
+  <main class="bg-slate-900">
+    <div class="max-w-2xl mx-auto px-4 py-12">
+      <h1 class="text-3xl font-bold text-white mb-8">Términos de Servicio</h1>
+
+      <div class="space-y-8 text-slate-300 leading-relaxed">
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">1. Aceptación</h2>
+          <p>Al usar Calma en 3 Minutos aceptas estos términos.</p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">2. Uso del servicio y aviso médico</h2>
+          <p class="mb-3">
+            Calma en 3 Minutos ofrece ejercicios de respiración con fines de bienestar. <strong class="text-white">No es
+            un servicio médico</strong> y no sustituye el consejo, el diagnóstico ni el tratamiento de un profesional.
+          </p>
+          <p>
+            Si sientes mareo intenso, opresión fuerte en el pecho o cualquier síntoma preocupante durante un
+            ejercicio, detente y busca atención médica. Si tienes ansiedad severa, ataques recurrentes o
+            pensamientos de autolesión, acude a un profesional de inmediato.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">3. Uso permitido</h2>
+          <p>
+            Es una herramienta gratuita para uso personal. No está permitida su reventa ni su uso comercial sin
+            autorización previa.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">4. Limitación de responsabilidad</h2>
+          <p>
+            Usas la aplicación bajo tu propia responsabilidad. Calma en 3 Minutos no se hace responsable de las
+            decisiones que tomes basándote en su uso.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">5. Propiedad intelectual y contacto</h2>
+          <p>
+            El contenido y el diseño están protegidos por derechos de autor. Para cualquier consulta, escríbenos a
+            <a href={`mailto:${SITE.contactEmail}`} class="text-teal-300 hover:text-teal-200"> {SITE.contactEmail}</a>.
+          </p>
+        </section>
       </div>
-    </header>
-
-    <section class="pt-24 pb-16 px-4">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold text-white mb-8">Términos de Servicio</h2>
-        
-        <div class="prose prose-invert max-w-none">
-          <h3 class="text-xl font-bold text-white mt-8 mb-4">1. Aceptación</h3>
-          <p class="text-slate-300 mb-4">
-            Al acceder y utilizar Calma en 3 Minutos, aceptas estos términos de servicio.
-          </p>
-
-          <h3 class="text-xl font-bold text-white mt-8 mb-4">2. Uso del Servicio</h3>
-          <p class="text-slate-300 mb-4">
-            Calma en 3 Minutos proporciona ejercicios de respiración para fines informativos y de bienestar. No sustituye consejo médico profesional.
-          </p>
-
-          <h3 class="text-xl font-bold text-white mt-8 mb-4">3. Limitación de Responsabilidad</h3>
-          <p class="text-slate-300 mb-4">
-            El uso de esta aplicación es bajo tu propio riesgo. Consulta a un profesional de la salud antes de comenzar cualquier programa de ejercicio.
-          </p>
-
-          <h3 class="text-xl font-bold text-white mt-8 mb-4">4. Propiedad Intelectual</h3>
-          <p class="text-slate-300 mb-4">
-            El contenido y diseño de Calma en 3 Minutos están protegidos por derechos de autor.
-          </p>
-        </div>
-      </div>
-    </section>
+    </div>
   </main>
 </BaseLayout>

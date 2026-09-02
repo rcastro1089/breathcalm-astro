@@ -1,0 +1,305 @@
+---
+import { BREATHING_TECHNIQUES } from '../data/constants';
+
+export interface Props {
+  heading?: string;      // texto del H1 (solo se usa si withHeading)
+  withHeading?: boolean; // si el componente pinta el <h1>
+  sub?: string;
+  micro?: string;
+}
+const {
+  heading = 'Calma un ataque de ansiedad en 3 minutos',
+  withHeading = true,
+  sub = 'Respiración guiada para cuando el corazón se acelera y sientes que no te entra el aire. No tienes que contar nada: sigues el círculo y respiras conmigo.',
+  micro = 'Sin descargar nada · sin registro · gratis',
+} = Astro.props;
+
+// Config mínima que necesita el script en el cliente
+const techniques = BREATHING_TECHNIQUES.map((t) => ({
+  id: t.id,
+  name: t.name,
+  inhale: t.inhale,
+  hold: t.hold,
+  exhale: t.exhale,
+  holdEmpty: t.holdEmpty ?? 0,
+  totalTime: t.totalTime,
+}));
+
+const shortNames: Record<string, string> = {
+  '4-7-8': '4-7-8',
+  diafragmatica: 'Diafragmática',
+  box: 'Cuadrada',
+  'nasal-alternante': 'Nasal alternante',
+  'labios-fruncidos': 'Labios fruncidos',
+};
+---
+
+<div id="breathing-app" class="w-full flex flex-col items-center justify-center">
+  <!-- Pantalla inicio -->
+  <div id="home-screen" class="flex flex-col items-center justify-center text-center">
+    {withHeading && (
+      <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">{heading}</h1>
+    )}
+    <p class="text-lg text-slate-300 mb-10 max-w-md">{sub}</p>
+
+    <button
+      id="start-btn"
+      class="relative w-44 h-44 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 shadow-2xl shadow-teal-500/40 active:scale-95 transition-transform duration-150 focus:outline-none focus:ring-4 focus:ring-teal-400/50 select-none"
+      aria-label="Empezar a respirar"
+    >
+      <span class="motion-pulse absolute inset-0 rounded-full border-2 border-teal-400/25 pointer-events-none"></span>
+      <span class="absolute inset-0 flex items-center justify-center">
+        <img src="/icons/play.svg" alt="" aria-hidden="true" class="w-14 h-14 md:w-16 md:h-16 ml-1" />
+      </span>
+    </button>
+    <p class="mt-6 text-slate-400 text-xs tracking-wider uppercase">Toca para empezar</p>
+    <p class="mt-1 text-slate-500 text-xs">{micro}</p>
+
+    <!-- Selector de técnica -->
+    <fieldset class="mt-8">
+      <legend class="sr-only">Elige la técnica de respiración</legend>
+      <div id="technique-picker" class="flex flex-wrap justify-center gap-2 max-w-md">
+        {techniques.map((t) => (
+          <button
+            type="button"
+            class="tech-chip px-3 py-1.5 rounded-full text-sm border border-slate-700 text-slate-300 hover:border-teal-400/60 hover:text-white transition-colors"
+            data-tid={t.id}
+            aria-pressed="false"
+          >
+            {shortNames[t.id] ?? t.name}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+  </div>
+
+  <!-- Pantalla ejercicio -->
+  <div id="exercise-screen" class="hidden flex-col items-center justify-center w-full max-w-sm mx-auto">
+    <p id="technique-name" class="text-sm text-slate-400 uppercase tracking-widest mb-6">4-7-8</p>
+
+    <div class="relative w-64 h-64 md:w-72 md:h-72 mb-8">
+      <svg class="w-full h-full -rotate-90" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"></circle>
+        <circle
+          id="progress-ring"
+          cx="100" cy="100" r="90"
+          fill="none" stroke="#2dd4bf" stroke-width="6" stroke-linecap="round"
+          stroke-dasharray="565.48" stroke-dashoffset="565.48"
+        ></circle>
+      </svg>
+      <div class="absolute inset-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+        <div id="breath-orb" class="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center">
+          <span id="seconds-display" class="text-4xl md:text-5xl font-bold text-white">4</span>
+        </div>
+      </div>
+    </div>
+
+    <p id="phase-text" class="text-2xl md:text-3xl font-semibold text-white mb-2 h-10" aria-live="polite">Inhala</p>
+    <p id="phase-subtext" class="text-sm text-slate-400 mb-4">por la nariz</p>
+    <p class="text-xs text-slate-500 mb-6">¿Te mareas? Para y siéntate.</p>
+
+    <div class="flex items-center gap-2 text-slate-400 mb-8">
+      <img src="/icons/clock.svg" alt="" aria-hidden="true" class="w-4 h-4" />
+      <span id="total-timer" class="text-sm font-mono">3:00</span>
+    </div>
+
+    <div class="flex gap-3">
+      <button id="pause-btn" type="button" aria-label="Pausar" class="w-14 h-14 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors border border-slate-700">
+        <img src="/icons/pause.svg" alt="" aria-hidden="true" class="w-5 h-5" />
+      </button>
+      <button id="stop-btn" type="button" aria-label="Terminar el ejercicio" class="w-14 h-14 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors border border-slate-700">
+        <img src="/icons/x.svg" alt="" aria-hidden="true" class="w-5 h-5" />
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  #breath-orb { transition: transform 4s ease-in-out, background 0.8s ease; background: radial-gradient(circle, #2dd4bf44, #2dd4bf22); }
+  .motion-pulse { animation: bc-pulse 3s ease-in-out infinite; }
+  @keyframes bc-pulse { 0%,100% { opacity: .25; transform: scale(1); } 50% { opacity: .6; transform: scale(1.04); } }
+  .tech-chip[aria-pressed="true"] { border-color: #2dd4bf; color: #fff; background: rgba(45,212,191,.12); }
+  @media (prefers-reduced-motion: reduce) {
+    #breath-orb { transition: background 0.4s ease !important; }
+    .motion-pulse { animation: none; }
+    #start-btn { transition: none; }
+  }
+</style>
+
+<script define:vars={{ techniques }}>
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const CIRC = 2 * Math.PI * 90;
+
+  const PHASE_META = {
+    INHALE:     { name: 'Inhala', sub: 'por la nariz', color: '#2dd4bf', scale: 1.35 },
+    HOLD:       { name: 'Sostén', sub: 'mantén, sin apretar', color: '#a5b4fc', scale: 1.35 },
+    EXHALE:     { name: 'Exhala', sub: 'despacio, como si empañaras un cristal', color: '#67e8f9', scale: 1.0 },
+    HOLD_EMPTY: { name: 'Sostén vacío', sub: 'pulmones vacíos', color: '#94a3b8', scale: 1.0 },
+  };
+
+  function buildPhases(t) {
+    const out = [];
+    if (t.inhale > 0) out.push({ key: 'INHALE', dur: t.inhale });
+    if (t.hold > 0) out.push({ key: 'HOLD', dur: t.hold });
+    if (t.exhale > 0) out.push({ key: 'EXHALE', dur: t.exhale });
+    if (t.holdEmpty > 0) out.push({ key: 'HOLD_EMPTY', dur: t.holdEmpty });
+    return out;
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const home = $('home-screen');
+  const exercise = $('exercise-screen');
+  const ring = $('progress-ring');
+  const orb = $('breath-orb');
+  const secs = $('seconds-display');
+  const phaseText = $('phase-text');
+  const phaseSub = $('phase-subtext');
+  const timerEl = $('total-timer');
+  const nameEl = $('technique-name');
+  const pauseBtn = $('pause-btn');
+
+  const shortNames = { '4-7-8': '4-7-8', 'diafragmatica': 'Diafragmática', 'box': 'Respiración cuadrada', 'nasal-alternante': 'Nasal alternante', 'labios-fruncidos': 'Labios fruncidos' };
+
+  let current = techniques[0];
+  let phases = buildPhases(current);
+  let cycleLen = phases.reduce((a, p) => a + p.dur, 0);
+  let totalSecs = current.totalTime * 60;
+
+  let playing = false, paused = false;
+  let totalLeft = totalSecs;
+  let cycleElapsed = 0;
+  let phaseIdx = 0;
+  let phaseLeft = phases[0].dur;
+  let iv = null;
+
+  function fmt(s) { return Math.floor(s / 60) + ':' + (s % 60).toString().padStart(2, '0'); }
+
+  function selectTechnique(id) {
+    const t = techniques.find((x) => x.id === id);
+    if (!t) return;
+    current = t;
+    phases = buildPhases(t);
+    cycleLen = phases.reduce((a, p) => a + p.dur, 0);
+    totalSecs = t.totalTime * 60;
+    document.querySelectorAll('.tech-chip').forEach((c) => {
+      c.setAttribute('aria-pressed', String(c.dataset.tid === id));
+    });
+  }
+
+  function paintPhase() {
+    const p = phases[phaseIdx];
+    const meta = PHASE_META[p.key];
+    phaseText.textContent = meta.name;
+    phaseSub.textContent = meta.sub;
+    secs.textContent = phaseLeft;
+    ring.style.stroke = meta.color;
+    if (!REDUCED) {
+      orb.style.transitionDuration = p.dur + 's, .8s';
+      orb.style.transform = 'scale(' + meta.scale + ')';
+    }
+    orb.style.background = 'radial-gradient(circle, ' + meta.color + '55, ' + meta.color + '22)';
+  }
+
+  function tick() {
+    if (!playing || paused) return;
+    totalLeft--;
+    timerEl.textContent = fmt(Math.max(totalLeft, 0));
+    if (totalLeft <= 0) return complete();
+
+    cycleElapsed = (cycleElapsed + 1) % cycleLen;
+    ring.style.strokeDashoffset = CIRC * (1 - cycleElapsed / cycleLen);
+
+    phaseLeft--;
+    if (phaseLeft <= 0) {
+      phaseIdx = (phaseIdx + 1) % phases.length;
+      phaseLeft = phases[phaseIdx].dur;
+      paintPhase();
+    } else {
+      secs.textContent = phaseLeft;
+    }
+  }
+
+  function start() {
+    home.classList.add('hidden');
+    exercise.classList.remove('hidden');
+    exercise.classList.add('flex');
+    nameEl.textContent = shortNames[current.id] || current.name;
+
+    playing = true; paused = false;
+    totalLeft = totalSecs;
+    cycleElapsed = 0;
+    phaseIdx = 0;
+    phaseLeft = phases[0].dur;
+    timerEl.textContent = fmt(totalLeft);
+    ring.style.strokeDashoffset = CIRC;
+    paintPhase();
+    iv = setInterval(tick, 1000);
+  }
+
+  function pause() {
+    if (paused) {
+      paused = false;
+      pauseBtn.querySelector('img').src = '/icons/pause.svg';
+      pauseBtn.setAttribute('aria-label', 'Pausar');
+      paintPhase();
+      iv = setInterval(tick, 1000);
+    } else {
+      paused = true;
+      clearInterval(iv);
+      pauseBtn.querySelector('img').src = '/icons/play.svg';
+      pauseBtn.setAttribute('aria-label', 'Continuar');
+      phaseText.textContent = 'En pausa';
+    }
+  }
+
+  function stop() {
+    playing = false; paused = false;
+    clearInterval(iv);
+    if (!REDUCED) orb.style.transform = 'scale(1)';
+    orb.style.background = 'radial-gradient(circle, #2dd4bf44, #2dd4bf22)';
+    ring.style.strokeDashoffset = CIRC;
+    ring.style.stroke = '#2dd4bf';
+    secs.textContent = phases[0].dur;
+    phaseText.textContent = PHASE_META[phases[0].key].name;
+    phaseSub.textContent = PHASE_META[phases[0].key].sub;
+    timerEl.textContent = fmt(totalSecs);
+    exercise.classList.add('hidden');
+    exercise.classList.remove('flex');
+    home.classList.remove('hidden');
+    home.classList.add('flex');
+  }
+
+  function complete() {
+    playing = false;
+    clearInterval(iv);
+    phaseText.textContent = 'Lo lograste';
+    phaseSub.textContent = 'Si el pulso sigue alto, repítelo.';
+    secs.textContent = '';
+    if (!REDUCED) orb.style.transform = 'scale(1)';
+    orb.style.background = 'radial-gradient(circle, #86efac66, #86efac33)';
+    ring.style.strokeDashoffset = 0;
+    ring.style.stroke = '#86efac';
+    document.dispatchEvent(new CustomEvent('bc:completed', { detail: { techniqueId: current.id } }));
+    setTimeout(stop, 4000);
+  }
+
+  document.querySelectorAll('.tech-chip').forEach((c) => {
+    c.addEventListener('click', () => selectTechnique(c.dataset.tid));
+  });
+  $('start-btn').addEventListener('click', start);
+  pauseBtn.addEventListener('click', pause);
+  $('stop-btn').addEventListener('click', stop);
+
+  // Preselección / autostart desde /?tecnica=<slug|id>&start=1
+  const params = new URLSearchParams(location.search);
+  const req = params.get('tecnica');
+  if (req) {
+    const bySlug = { 'respiracion-4-7-8': '4-7-8', 'respiracion-diafragmatica': 'diafragmatica', 'respiracion-cuadrada': 'box', 'respiracion-nasal-alternante': 'nasal-alternante', 'respiracion-labios-fruncidos': 'labios-fruncidos' };
+    const id = bySlug[req] || (techniques.some((t) => t.id === req) ? req : null);
+    if (id) {
+      selectTechnique(id);
+      if (params.has('start')) start();
+    }
+  }
+  if (!document.querySelector('.tech-chip[aria-pressed="true"]')) selectTechnique(current.id);
+</script>

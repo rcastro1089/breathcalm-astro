@@ -1,241 +1,188 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import BreathingExercise from '../components/BreathingExercise.astro';
+import { HOME, REVIEWER, SITE } from '../data/site';
 
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Calma en 3 Minutos",
-  "description": "Ejercicios de respiración para calmar la ansiedad en 3 minutos.",
-  "url": "https://calmaen3minutos.com",
-  "applicationCategory": "HealthApplication"
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Calma en 3 Minutos',
+  alternateName: 'Ejercicios de respiración para la ansiedad',
+  description:
+    'Herramienta web gratuita de respiración guiada para calmar un ataque de ansiedad o de pánico en 3 minutos. Sin registro, sin descarga.',
+  url: 'https://calmaen3minutos.com/',
+  applicationCategory: 'HealthApplication',
+  operatingSystem: 'All',
+  browserRequirements: 'Requiere JavaScript. Funciona en Chrome, Firefox, Safari y Edge.',
+  inLanguage: 'es',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  author: { '@type': 'Person', name: 'Ricardo Castro' },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: HOME.faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
 };
 ---
 
-<BaseLayout 
-  title="Calma tu Ansiedad en 3 Minutos | Ejercicios de Respiración"
-  description="Ejercicios de respiración para crisis de ansiedad. 4-7-8, box breathing, diafragmática. Gratis."
-  canonical="https://calmaen3minutos.com/"
+<BaseLayout
+  title="Calma un Ataque de Ansiedad en 3 Minutos | Respiración Guiada"
+  description="Respiración guiada para calmar un ataque de ansiedad o de pánico en 3 minutos. Sigue el círculo, sin contar. Sin descargar, sin registro, gratis."
+  path="/"
+  header={false}
 >
-  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(webAppSchema)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />
 
-  <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center px-4 select-none">
-    
-    <!-- Home -->
-    <div id="home-screen" class="flex flex-col items-center justify-center">
-      <div class="mb-8 opacity-60">
-        <img src="/icons/lungs.svg" alt="" class="w-12 h-12 text-teal-400" />
-      </div>
-      <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-4">Calma Ahora</h1>
-      <p class="text-lg text-slate-400 text-center mb-10 max-w-sm">Tómate un respiro.</p>
-      <button id="start-btn" class="relative w-44 h-44 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 shadow-2xl shadow-teal-500/40 active:scale-95 transition-transform duration-150 focus:outline-none focus:ring-4 focus:ring-teal-400/50" aria-label="Empezar">
-        <div class="absolute inset-0 rounded-full border-2 border-teal-400/20 animate-pulse pointer-events-none"></div>
-        <div class="absolute inset-0 flex items-center justify-center">
-          <img src="/icons/play.svg" alt="" class="w-14 h-14 md:w-16 md:h-16 text-white ml-1" />
-        </div>
-      </button>
-      <p class="mt-8 text-slate-600 text-xs tracking-wider uppercase">Toca para empezar</p>
-    </div>
-
-    <!-- Ejercicio -->
-    <div id="exercise-screen" class="hidden flex-col items-center justify-center w-full max-w-sm mx-auto">
-      <p id="technique-name" class="text-sm text-slate-500 uppercase tracking-widest mb-6">4-7-8</p>
-
-      <!-- Circulo de progreso -->
-      <div class="relative w-64 h-64 md:w-72 md:h-72 mb-8">
-        <svg class="w-full h-full -rotate-90" viewBox="0 0 200 200">
-          <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="6" />
-          <circle 
-            id="progress-ring" 
-            cx="100" cy="100" r="90" 
-            fill="none" 
-            stroke="#2dd4bf" 
-            stroke-width="6"
-            stroke-linecap="round"
-            stroke-dasharray="565.48"
-            stroke-dashoffset="565.48"
-          />
-        </svg>
-        
-        <!-- Orbe que respira -->
-        <div class="absolute inset-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
-          <div id="breath-orb" class="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center" style="transition: transform 4s ease-in-out, background 0.8s ease">
-            <span id="seconds-display" class="text-4xl md:text-5xl font-bold text-white">4</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fase -->
-      <p id="phase-text" class="text-2xl md:text-3xl font-semibold text-white mb-2 h-10">Inhala</p>
-      <p id="phase-subtext" class="text-sm text-slate-500 mb-6">por la nariz</p>
-
-      <!-- Timer -->
-      <div class="flex items-center gap-2 text-slate-500 mb-8">
-        <img src="/icons/clock.svg" alt="" class="w-4 h-4" />
-        <span id="total-timer" class="text-sm font-mono">3:00</span>
-      </div>
-
-      <!-- Controles -->
-      <div class="flex gap-3">
-        <button id="pause-btn" class="w-14 h-14 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors border border-slate-700">
-          <img src="/icons/pause.svg" alt="" class="w-5 h-5 text-white" />
-        </button>
-        <button id="stop-btn" class="w-14 h-14 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center transition-colors border border-slate-700">
-          <img src="/icons/x.svg" alt="" class="w-5 h-5 text-white" />
-        </button>
-      </div>
-    </div>
+  <!-- Hero / herramienta -->
+  <main class="min-h-[100svh] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center px-4 py-16">
+    <BreathingExercise heading={HOME.hero.h1} sub={HOME.hero.sub} micro={HOME.hero.micro} />
+    <a href="#saber-mas" class="mt-14 text-slate-500 text-xs hover:text-slate-300 transition-colors">Saber más ↓</a>
   </main>
 
+  <div id="saber-mas" class="bg-slate-900">
+    <div class="max-w-3xl mx-auto px-4 py-16 space-y-16">
+
+      <!-- Por qué funciona -->
+      <section>
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">{HOME.why.h2}</h2>
+        {HOME.why.body.map((p) => <p class="text-slate-300 leading-relaxed mb-4">{p}</p>)}
+      </section>
+
+      <!-- Técnicas -->
+      <section id="tecnicas">
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">{HOME.techniquesIntro.h2}</h2>
+        <ul class="grid gap-3 sm:grid-cols-2">
+          {HOME.techniquesIntro.items.map((t) => (
+            <li>
+              <a
+                href={`/tecnica/${t.slug}/`}
+                class="block h-full rounded-2xl border border-slate-700 bg-slate-800/40 p-5 hover:border-teal-400/60 hover:bg-slate-800/70 transition-colors"
+              >
+                <h3 class="font-bold text-white mb-1">{t.name}</h3>
+                <p class="text-sm text-slate-300">{t.forWhat}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Síntomas -->
+      <section>
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">{HOME.symptoms.h2}</h2>
+        <ul class="grid gap-x-6 gap-y-2 sm:grid-cols-2 text-slate-300 mb-6">
+          {HOME.symptoms.list.map((s) => (
+            <li class="flex gap-2"><span class="text-teal-400" aria-hidden="true">·</span><span>{s}</span></li>
+          ))}
+        </ul>
+        <p class="text-slate-300 leading-relaxed">{HOME.symptoms.reassurance}</p>
+      </section>
+
+      <!-- Sueño / estrés -->
+      <section>
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">{HOME.sleepStress.h2}</h2>
+        <p class="text-slate-300 leading-relaxed mb-4">{HOME.sleepStress.body}</p>
+        <p class="flex flex-wrap gap-4 text-teal-300">
+          <a class="hover:text-teal-200" href="/tecnica/respiracion-4-7-8/">Respiración para dormir →</a>
+          <a class="hover:text-teal-200" href="/tecnica/respiracion-diafragmatica/">Respiración para el estrés →</a>
+        </p>
+      </section>
+
+      <!-- Sin fricción -->
+      <section>
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">{HOME.noFriction.h2}</h2>
+        <p class="text-slate-300 leading-relaxed">{HOME.noFriction.body}</p>
+      </section>
+
+      <!-- Revisión médica -->
+      <section class="rounded-2xl border border-slate-700 bg-slate-800/40 p-6 flex flex-col sm:flex-row gap-5 items-start">
+        <img src={REVIEWER.photo} alt={`Foto de ${REVIEWER.name}`} width="72" height="72" class="w-[72px] h-[72px] rounded-full object-cover shrink-0" />
+        <div>
+          <p class="text-slate-200">
+            Contenido revisado por la <strong class="text-white">{REVIEWER.name}</strong>, {REVIEWER.title}.
+            Última revisión: {new Date(REVIEWER.lastReviewed).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' })}.
+          </p>
+          <p class="text-sm text-slate-400 mt-2">
+            Los ejercicios de respiración ayudan a muchas personas a recuperar el control en el momento.
+            No sustituyen el diagnóstico ni el tratamiento de un profesional de salud mental.
+          </p>
+          <a href="/nosotros/#revision" class="text-sm text-teal-300 hover:text-teal-200 mt-2 inline-block">Sobre quién está detrás →</a>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section>
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-6">Preguntas frecuentes</h2>
+        <div class="space-y-5">
+          {HOME.faq.map((f) => (
+            <div>
+              <h3 class="font-semibold text-white mb-1">{f.q}</h3>
+              <p class="text-slate-300 leading-relaxed">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Modal de captura de email (post-ejercicio) -->
+  <div id="email-modal" hidden class="fixed inset-0 z-[60] bg-black/70 flex items-center justify-center p-4">
+    <div class="w-full max-w-sm rounded-2xl bg-slate-800 border border-slate-700 p-6 text-center">
+      <p class="text-xl font-bold text-white mb-1">Lo lograste</p>
+      <p class="text-sm text-slate-300 mb-5">Has respirado unos minutos. Si el pulso sigue alto, repítelo: no hay límite.</p>
+      <button id="modal-repeat" type="button" class="w-full py-3 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold transition-colors mb-5">Repetir el ejercicio</button>
+
+      <div class="border-t border-slate-700 pt-5 text-left">
+        <p class="text-sm text-slate-300 mb-3">¿Quieres tenerlo preparado para la próxima vez? Te enviamos la guía gratuita <strong class="text-white">«5 pasos para detener el pánico»</strong>.</p>
+        <form id="email-form" class="flex flex-col gap-2">
+          <input id="email-input" type="email" required placeholder="nombre@correo.com"
+            class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-600 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-400" />
+          <button type="submit" class="py-2.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-white font-medium transition-colors">Enviármela</button>
+        </form>
+        <p id="email-msg" class="text-xs text-slate-400 mt-2">Opcional. Sin spam. Puedes darte de baja cuando quieras.</p>
+        <button id="modal-close" type="button" class="text-xs text-slate-500 hover:text-slate-300 mt-3">Ahora no</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Configuracion 4-7-8
-    const INHALE = 4;
-    const HOLD = 7;
-    const EXHALE = 8;
-    const HOLD_EMPTY = 0;
-    const CYCLE = INHALE + HOLD + EXHALE + HOLD_EMPTY; // 19 segundos
-    const TOTAL = 180;
-    const CIRC = 2 * Math.PI * 90;
+    const modal = document.getElementById('email-modal');
+    const openModal = () => { if (modal) modal.hidden = false; };
+    const closeModal = () => { if (modal) modal.hidden = true; };
 
-    // Colores calmantes por fase
-    const COLORS = ['#2dd4bf', '#a5b4fc', '#67e8f9']; // teal, indigo, cyan
-    const PHASE_NAMES = ['Inhala', 'Sostén', 'Exhala'];
-    const PHASE_SUBS = ['por la nariz', 'mantén', 'lentamente'];
-    const PHASE_DURS = [INHALE, HOLD, EXHALE];
+    document.addEventListener('bc:completed', () => setTimeout(openModal, 3500));
+    document.getElementById('modal-close')?.addEventListener('click', closeModal);
+    document.getElementById('modal-repeat')?.addEventListener('click', () => {
+      closeModal();
+      document.getElementById('start-btn')?.dispatchEvent(new Event('click'));
+    });
 
-    // DOM
-    const home = document.getElementById('home-screen');
-    const exercise = document.getElementById('exercise-screen');
-    const ring = document.getElementById('progress-ring');
-    const orb = document.getElementById('breath-orb');
-    const secs = document.getElementById('seconds-display');
-    const phase = document.getElementById('phase-text');
-    const sub = document.getElementById('phase-subtext');
-    const timer = document.getElementById('total-timer');
-
-    let playing = false, paused = false;
-    let totalLeft = TOTAL;
-    let cycleProgress = 0; // 0 a 1
-    let currentPhaseIdx = 0;
-    let phaseTimeLeft = PHASE_DURS[0];
-    let mainInterval = null;
-
-    function fmt(s) { return Math.floor(s/60) + ':' + (s%60).toString().padStart(2,'0'); }
-
-    function updateRing(progress, color) {
-      ring.style.strokeDashoffset = CIRC * (1 - progress);
-      ring.style.stroke = color;
-    }
-
-    function updateOrb(scale, color) {
-      orb.style.transform = `scale(${scale})`;
-      orb.style.background = color;
-    }
-
-    function setPhaseUI(idx) {
-      currentPhaseIdx = idx;
-      phaseTimeLeft = PHASE_DURS[idx];
-      phase.textContent = PHASE_NAMES[idx];
-      sub.textContent = PHASE_SUBS[idx];
-      secs.textContent = phaseTimeLeft;
-      
-      const color = COLORS[idx];
-      const scale = idx === 0 ? 1.35 : 1; // inhala expands, others stay
-      updateOrb(scale, idx === 0 ? `radial-gradient(circle, ${color}66, ${color}33)` : `radial-gradient(circle, ${color}44, ${color}22)`);
-    }
-
-    function tick() {
-      if (!playing || paused) return;
-      
-      totalLeft--;
-      timer.textContent = fmt(totalLeft);
-      
-      if (totalLeft <= 0) { complete(); return; }
-      
-      // Avanzar progreso de ciclo
-      cycleProgress += 1 / CYCLE;
-      
-      // Cambiar de fase si es necesario
-      phaseTimeLeft--;
-      if (phaseTimeLeft <= 0) {
-        currentPhaseIdx++;
-        if (currentPhaseIdx >= PHASE_DURS.length) {
-          currentPhaseIdx = 0; // Volver al inicio del ciclo
-          cycleProgress = 0; // Reset barra
-        }
-        setPhaseUI(currentPhaseIdx);
+    const form = document.getElementById('email-form') as HTMLFormElement | null;
+    const input = document.getElementById('email-input') as HTMLInputElement | null;
+    const msg = document.getElementById('email-msg');
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!input || !msg) return;
+      msg.textContent = 'Enviando…';
+      try {
+        const r = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: input.value }),
+        });
+        msg.textContent = r.ok
+          ? 'Revisa tu correo (mira también en spam). La guía va de camino.'
+          : 'No se pudo enviar ahora. Escríbenos y te la mandamos.';
+      } catch {
+        msg.textContent = 'No se pudo enviar ahora. Escríbenos y te la mandamos.';
       }
-      
-      secs.textContent = phaseTimeLeft;
-      updateRing(cycleProgress, COLORS[currentPhaseIdx]);
-    }
-
-    function start() {
-      home.classList.add('hidden');
-      exercise.classList.remove('hidden');
-      exercise.classList.add('flex');
-      
-      playing = true;
-      paused = false;
-      totalLeft = TOTAL;
-      cycleProgress = 0;
-      currentPhaseIdx = 0;
-      phaseTimeLeft = PHASE_DURS[0];
-      
-      timer.textContent = fmt(totalLeft);
-      setPhaseUI(0);
-      updateRing(0, COLORS[0]);
-      
-      mainInterval = setInterval(tick, 1000);
-    }
-
-    function pause() {
-      if (paused) {
-        paused = false;
-        document.getElementById('pause-btn').querySelector('img').src = '/icons/pause.svg';
-        mainInterval = setInterval(tick, 1000);
-      } else {
-        paused = true;
-        clearInterval(mainInterval);
-        document.getElementById('pause-btn').querySelector('img').src = '/icons/play.svg';
-        phase.textContent = 'Pausado';
-      }
-    }
-
-    function stop() {
-      playing = false;
-      paused = false;
-      clearInterval(mainInterval);
-      
-      orb.style.transform = 'scale(1)';
-      orb.style.background = 'radial-gradient(circle, #2dd4bf44, #2dd4bf22)';
-      updateRing(0, '#2dd4bf');
-      secs.textContent = INHALE;
-      phase.textContent = 'Inhala';
-      sub.textContent = 'por la nariz';
-      timer.textContent = fmt(TOTAL);
-      
-      exercise.classList.add('hidden');
-      exercise.classList.remove('flex');
-      home.classList.remove('hidden');
-      home.classList.add('flex');
-    }
-
-    function complete() {
-      playing = false;
-      clearInterval(mainInterval);
-      
-      phase.textContent = 'Completado';
-      sub.textContent = 'bien hecho';
-      secs.textContent = '';
-      orb.style.transform = 'scale(1)';
-      orb.style.background = 'radial-gradient(circle, #86efac66, #86efac33)';
-      updateRing(1, '#86efac');
-      
-      setTimeout(stop, 3000);
-    }
-
-    document.getElementById('start-btn').addEventListener('click', start);
-    document.getElementById('pause-btn').addEventListener('click', pause);
-    document.getElementById('stop-btn').addEventListener('click', stop);
+    });
   </script>
 </BaseLayout>

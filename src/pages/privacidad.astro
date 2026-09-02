@@ -1,64 +1,59 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import LanguageSwitcher from '../components/ui/LanguageSwitcher.tsx';
-
-const seo = {
-  title: "Política de Privacidad | Calma en 3 Minutos",
-  description: "Conoce cómo recopilamos, usamos y protegemos tu información personal en Calma en 3 Minutos.",
-  canonical: "https://calmaen3minutos.com/privacidad/",
-};
+import { SITE } from '../data/site';
 ---
 
-<BaseLayout 
-  title={seo.title} 
-  description={seo.description}
-  canonical={seo.canonical}
+<BaseLayout
+  title="Política de Privacidad | Calma en 3 Minutos"
+  description="Cómo tratamos tus datos en Calma en 3 Minutos: sin registro para usar la herramienta, estadísticas guardadas solo en tu navegador y correo únicamente si te suscribes."
+  path="/privacidad/"
 >
-  <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50">
-      <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-          </div>
-          <h1 class="text-xl font-bold text-white">Calma en 3 Minutos</h1>
-        </a>
-        <LanguageSwitcher client:load />
+  <main class="bg-slate-900">
+    <div class="max-w-2xl mx-auto px-4 py-12">
+      <h1 class="text-3xl font-bold text-white mb-8">Política de Privacidad</h1>
+
+      <div class="space-y-8 text-slate-300 leading-relaxed">
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">1. Qué datos recopilamos</h2>
+          <p class="mb-3">
+            Para usar la herramienta no necesitas registrarte ni darnos ningún dato. Los ejercicios de
+            respiración funcionan en tu navegador.
+          </p>
+          <p class="mb-3">
+            <strong>Datos en tu dispositivo:</strong> si en algún momento se guardan tus estadísticas de uso,
+            se almacenan solo en tu navegador (localStorage) y no salen de tu dispositivo.
+          </p>
+          <p>
+            <strong>Correo electrónico:</strong> solo lo recogemos si decides suscribirte para recibir la guía
+            gratuita u otros recursos. Puedes darte de baja en cualquier momento.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">2. Servicios de terceros</h2>
+          <ul class="space-y-2 pl-1">
+            <li class="flex gap-2"><span class="text-teal-400" aria-hidden="true">·</span><span><strong>Cloudflare Pages</strong> aloja el sitio.</span></li>
+            <li class="flex gap-2"><span class="text-teal-400" aria-hidden="true">·</span><span><strong>Loops</strong> gestiona el envío de correos si te suscribes.</span></li>
+            <li class="flex gap-2"><span class="text-teal-400" aria-hidden="true">·</span><span><strong>Google Analytics</strong> nos ayuda a entender el uso del sitio de forma agregada. Puedes rechazarlo en el banner de cookies.</span></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">3. Cookies</h2>
+          <p>
+            Usamos almacenamiento local para recordar tu elección sobre las cookies y, si lo aceptas, cookies de
+            analítica anónima para mejorar el sitio. Puedes aceptarlas o rechazarlas en el banner.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">4. Tus derechos y contacto</h2>
+          <p>
+            Puedes pedirnos acceder, rectificar o eliminar cualquier dato que tengamos sobre ti (por ejemplo, tu
+            correo) escribiendo a <a href={`mailto:${SITE.contactEmail}`} class="text-teal-300 hover:text-teal-200">{SITE.contactEmail}</a>.
+          </p>
+        </section>
       </div>
-    </header>
-
-    <section class="pt-24 pb-16 px-4">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold text-white mb-8">Política de Privacidad</h2>
-        
-        <div class="prose prose-invert max-w-none">
-          <h3 class="text-xl font-bold text-white mt-8 mb-4">1. Información que Recopilamos</h3>
-          <p class="text-slate-300 mb-4">
-            Calma en 3 Minutos es una aplicación web que funciona completamente en tu navegador. No recopilamos información personal identificable.
-          </p>
-          <p class="text-slate-300 mb-4">
-            <strong>Datos locales:</strong> Tus estadísticas de ejercicio se almacenan únicamente en tu navegador (localStorage) y nunca salen de tu dispositivo.
-          </p>
-
-          <h3 class="text-xl font-bold text-white mt-8 mb-4">2. Cookies</h3>
-          <p class="text-slate-300 mb-4">
-            Utilizamos cookies esenciales para el funcionamiento del sitio. Puedes rechazar las cookies de analytics en el banner de cookies.
-          </p>
-
-          <h3 class="text-xl font-bold text-white mt-8 mb-4">3. Analytics</h3>
-          <p class="text-slate-300 mb-4">
-            Utilizamos Google Analytics para entender cómo se utiliza el sitio. Puedes optar por no participar en el banner de cookies.
-          </p>
-
-          <h3 class="text-xl font-bold text-white mt-8 mb-4">4. Contacto</h3>
-          <p class="text-slate-300 mb-4">
-            Si tienes preguntas sobre esta política, contáctanos a través de nuestro formulario de contacto.
-          </p>
-        </div>
-      </div>
-    </section>
+    </div>
   </main>
 </BaseLayout>

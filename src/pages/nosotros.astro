@@ -1,67 +1,117 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import LanguageSwitcher from '../components/ui/LanguageSwitcher.tsx';
+import { REVIEWER, SITE } from '../data/site';
 
-const seo = {
-  title: "Sobre Nosotros | Calma en 3 Minutos",
-  description: "Conoce a Calma en 3 Minutos: ejercicios de respiración científicamente probados para calmar la ansiedad. Gratis y en español.",
-  canonical: "https://calmaen3minutos.com/nosotros/",
+const reviewedHuman = new Date(REVIEWER.lastReviewed).toLocaleDateString('es-ES', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'Sobre Calma en 3 Minutos',
+  url: `${SITE.domain}/nosotros/`,
+  inLanguage: 'es',
+  publisher: { '@type': 'Organization', name: SITE.name, url: `${SITE.domain}/` },
+  reviewedBy: {
+    '@type': 'Person',
+    name: REVIEWER.name,
+    jobTitle: 'Doctora en Medicina',
+    url: REVIEWER.linkedin,
+    identifier: REVIEWER.registration,
+    knowsAbout: ['Medicina', 'Neonatología', 'Atención temprana', 'Educación para la salud', 'Técnicas de respiración'],
+    hasCredential: {
+      '@type': 'EducationalOccupationalCredential',
+      credentialCategory: 'Licencia médica',
+      recognizedBy: { '@type': 'Organization', name: 'Junta de Vigilancia de la Profesión Médica (El Salvador)' },
+    },
+  },
 };
 ---
 
-<BaseLayout 
-  title={seo.title} 
-  description={seo.description}
-  canonical={seo.canonical}
+<BaseLayout
+  title="Sobre Nosotros | Calma en 3 Minutos"
+  description="Quién está detrás de Calma en 3 Minutos y con qué criterio médico se revisa el contenido: ejercicios de respiración guiada para la ansiedad, gratis y en español."
+  path="/nosotros/"
 >
-  <main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-    <header class="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50">
-      <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <main class="bg-slate-900">
+    <div class="max-w-2xl mx-auto px-4 py-12">
+      <h1 class="text-3xl md:text-4xl font-bold text-white mb-8">Sobre Calma en 3 Minutos</h1>
+
+      <div class="space-y-10 text-slate-300 leading-relaxed">
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">Por qué existe</h2>
+          <p class="mb-4">
+            Calma en 3 Minutos nace de haber estado en esas situaciones en las que aprender a controlar la
+            respiración es lo único que te sostiene: un momento crítico, una noticia que te bloquea, los nervios
+            justo antes de hacer algo importante, o simplemente un mal día que se te va de las manos.
+          </p>
+          <p>
+            En ese momento no tienes cabeza para instalar una app, crear una cuenta ni buscar un vídeo. Necesitas
+            algo que se abra y funcione ya. Controlar la crisis cuando ocurre no sustituye la atención médica que
+            venga después, pero muchas veces marca la diferencia. Esto es exactamente eso: una herramienta
+            gratuita, en español, para ese minuto.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">Qué es y qué no es</h2>
+          <p>
+            Calma en 3 Minutos es <strong class="text-white">respiración guiada para el momento</strong>: un
+            círculo marca el ritmo y tú lo sigues. <strong class="text-white">No es</strong> terapia,
+            <strong class="text-white"> no es</strong> una app de meditación y
+            <strong class="text-white"> no sustituye</strong> el diagnóstico ni el tratamiento de un profesional
+            de salud mental. Si los ataques se repiten, hablar con un profesional es lo que resuelve el fondo.
+          </p>
+        </section>
+
+        <section id="revision" class="scroll-mt-20 rounded-2xl border border-slate-700 bg-slate-800/40 p-6">
+          <h2 class="text-xl font-bold text-white mb-5">Quién revisa este contenido</h2>
+          <div class="flex flex-col sm:flex-row gap-5">
+            <img src={REVIEWER.photo} alt={`Foto de ${REVIEWER.name}`} width="112" height="112" class="w-28 h-28 rounded-full object-cover shrink-0" />
+            <div>
+              <p class="text-lg font-bold text-white">{REVIEWER.name}</p>
+              <p class="text-teal-300 text-sm">{REVIEWER.title}</p>
+              <p class="text-xs text-slate-400 mb-3">Colegiada {REVIEWER.registration}</p>
+              <p class="text-sm text-slate-300">{REVIEWER.extra}</p>
+              <a href={REVIEWER.linkedin} target="_blank" rel="noopener noreferrer" class="text-sm text-teal-300 hover:text-teal-200 mt-2 inline-block">Perfil de LinkedIn →</a>
+            </div>
           </div>
-          <h1 class="text-xl font-bold text-white">Calma en 3 Minutos</h1>
-        </a>
-        <LanguageSwitcher client:load />
+          <div class="mt-5 text-sm text-slate-300 space-y-3">
+            <p>La Dra. López revisa el contenido de Calma en 3 Minutos para verificar que:</p>
+            <ul class="space-y-1.5 pl-1">
+              <li class="flex gap-2"><span class="text-teal-400" aria-hidden="true">·</span><span>las técnicas están descritas de forma correcta y segura,</span></li>
+              <li class="flex gap-2"><span class="text-teal-400" aria-hidden="true">·</span><span>las indicaciones de cuándo <em>no</em> forzar una técnica son adecuadas,</span></li>
+              <li class="flex gap-2"><span class="text-teal-400" aria-hidden="true">·</span><span>las explicaciones son claras y no exageran lo que la respiración puede hacer.</span></li>
+            </ul>
+            <p class="text-slate-400">Última revisión: <strong class="text-slate-200">{reviewedHuman}</strong>.</p>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">Qué significa «revisado médicamente» aquí</h2>
+          <p>
+            Significa que una médica ha comprobado la exactitud y la seguridad de lo que lees.
+            <strong class="text-white"> No</strong> significa que Calma en 3 Minutos ofrezca atención médica
+            individual, ni que la Dra. López atienda consultas a través del sitio.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">Cómo se sostiene el proyecto</h2>
+          <p>
+            Calma en 3 Minutos es gratis y sin publicidad. Si dejas tu correo, te enviamos recursos gratuitos
+            (como la guía «5 pasos para detener el pánico»). Nada más.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-bold text-white mb-3">Contacto</h2>
+          <p>Escríbenos a <a href={`mailto:${SITE.contactEmail}`} class="text-teal-300 hover:text-teal-200">{SITE.contactEmail}</a>.</p>
+        </section>
       </div>
-    </header>
-
-    <section class="pt-24 pb-16 px-4">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold text-white mb-8">Sobre Calma en 3 Minutos</h2>
-        
-        <div class="prose prose-invert max-w-none">
-          <p class="text-slate-300 text-lg mb-6">
-            Calma en 3 Minutos nació con un objetivo claro: hacer accesible la ciencia de la respiración para todos.
-          </p>
-
-          <p class="text-slate-300 mb-6">
-            Las técnicas de respiración que ofrecemos están respaldadas por investigación científica y son utilizadas por profesionales de la salud mental en todo el mundo.
-          </p>
-
-          <h3 class="text-xl font-bold text-white mt-8 mb-4">Nuestra Misión</h3>
-          <p class="text-slate-300 mb-6">
-            Proporcionar herramientas gratuitas y efectivas para manejar la ansiedad, el estrés y las crisis de pánico, accesibles desde cualquier dispositivo en cualquier momento.
-          </p>
-
-          <h3 class="text-xl font-bold text-white mt-8 mb-4">Lo que Ofrecemos</h3>
-          <ul class="text-slate-300 space-y-2">
-            <li>• Ejercicios de respiración científicamente probados</li>
-            <li>• Guías paso a paso en español</li>
-            <li>• Seguimiento de progreso local</li>
-            <li>• 100% gratis, sin registro requerido</li>
-            <li>• Accesible desde cualquier dispositivo</li>
-          </ul>
-
-          <h3 class="text-xl font-bold text-white mt-8 mb-4">Contacto</h3>
-          <p class="text-slate-300">
-            ¿Tienes preguntas o sugerencias? Escríbenos y te responderemos lo antes posible.
-          </p>
-        </div>
-      </div>
-    </section>
+    </div>
   </main>
 </BaseLayout>
